@@ -11,6 +11,7 @@ namespace Tartarus
         protected override void Awake()
         {
             base.Awake();
+
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
         }
 
@@ -18,6 +19,12 @@ namespace Tartarus
         {
             base.Update();
             playerLocomotionManager.HandleAllMovement();
+        }
+
+        protected override void LateUpdate()
+        {
+            base.LateUpdate();
+            PlayerCamera.instance.HandleAllCameraActions();
         }
 
     }
