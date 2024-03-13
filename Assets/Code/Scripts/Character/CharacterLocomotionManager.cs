@@ -7,5 +7,10 @@ namespace Tartarus
     public class CharacterLocomotionManager : MonoBehaviour
     {
 
+        protected virtual void Awake()
+        {
+            //...
+        }
+
     }
 }
