@@ -72,34 +72,6 @@
                     "isPartOfComposite": true
                 }
             ]
-        },
-        {
-            "name": "Camera Movement",
-            "id": "449e2c51-d7da-4f14-9487-8781143a192b",
-            "actions": [
-                {
-                    "name": "Movement",
-                    "type": "PassThrough",
-                    "id": "d94d862c-3f3b-4cff-8df8-1cd9bb958aaf",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "afe9b77a-844b-48a6-b53e-d395db4a4f35",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
         }
     ],
     "controlSchemes": []

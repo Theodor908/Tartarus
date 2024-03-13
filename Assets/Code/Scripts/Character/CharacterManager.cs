@@ -19,10 +19,5 @@ namespace Tartarus
 
         }
 
-        protected virtual void LateUpdate()
-        {
-
-        }
-
     }
 }

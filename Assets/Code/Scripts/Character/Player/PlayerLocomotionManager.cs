@@ -14,9 +14,10 @@ namespace Tartarus
         public float moveAmount;
 
         private Vector3 moveDirection;
-        [SerializeField] float walkingSpeed = 2;
-        [SerializeField] float runningSpeed = 5;
-        [SerializeField] float rotationSpeed = 15;
+        [SerializeField]
+        float walkingSpeed = 2;
+        float runningSpeed = 5;
+        float rotationSpeed = 15;
 
         protected override void Awake()
         {
