@@ -17,7 +17,7 @@ namespace Tartarus
         [SerializeField] float leftAndRightRotationSpeed = 220; // Look left and right
         [SerializeField] float maximumPivot = 60; // Highest look up
         [SerializeField] float minimumPivot = -30; // Lowest look down
-        [SerializeField] float cameraCollisionRadius = 0.1f; // How much the camera will move when it collides with the enviroment
+        [SerializeField] float cameraCollisionRadius = 0.03f; // How much the camera will move when it collides with the enviroment
         [SerializeField] LayerMask collisionLayers; // What the camera will collide with
 
         [Header("Camera values")]
@@ -107,10 +107,12 @@ namespace Tartarus
                 targetCameraZPosition = -(distanceFromObject - cameraCollisionRadius);
             }
 
+            // If the camera is closer to the player than the collision radius, move the camera to the collision point
 
-            if(Mathf.Abs(targetCameraZPosition) < Mathf.Abs(cameraZPosition))
+            if (Mathf.Abs(targetCameraZPosition) > Mathf.Abs(cameraZPosition))
             {
                 targetCameraZPosition = -cameraCollisionRadius;
+
             }
 
             cameraObjectPosition.z = Mathf.Lerp(cameraObject.transform.localPosition.z, targetCameraZPosition, Time.deltaTime * 2.5f);
