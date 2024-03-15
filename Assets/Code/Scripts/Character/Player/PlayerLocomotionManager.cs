@@ -9,14 +9,18 @@ namespace Tartarus
 
         PlayerManager playerManager; 
                 
-        public float horizontalMovement;
-        public float verticalMovement;
-        public float moveAmount;
+        [HideInInspector] public float horizontalMovement;
+        [HideInInspector] float verticalMovement;
+        [HideInInspector] float moveAmount;
 
+        [Header ("Movement Settings")]
         private Vector3 moveDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float rotationSpeed = 15;
+
+        [Header ("Dodge Settings")]
+        private Vector3 rollDirection;
 
         protected override void Awake()
         {
@@ -82,6 +86,26 @@ namespace Tartarus
             Quaternion newRotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = newRotation;
 
+        }
+
+        public void AttemptToPerformDodge()
+        {
+            // If moving then perform a roll
+            if (moveAmount > 0)
+            {
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                rollDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                rollDirection.y = 0;
+                rollDirection.Normalize();
+
+                Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
+
+                playerManager.transform.rotation = playerRotation;
+            }
+            else // Stationary
+            {
+                // Perform a backestep, hardcoded maybe?
+            }
         }
 
     }

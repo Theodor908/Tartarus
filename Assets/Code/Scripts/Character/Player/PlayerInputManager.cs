@@ -12,14 +12,19 @@ namespace Tartarus
 
         [Header("Player Move Input")]
         [SerializeField] Vector2 movementInput;
-        [SerializeField] Vector2 cameraInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
 
+        [Header("Player Action Input")]
+        [SerializeField] bool dodgeInput = false;
+        
+
         [Header("Camera Move Input")]
+        [SerializeField] Vector2 cameraInput;
         public float cameraVerticalInput;
         public float cameraHorizontalInput;
+
 
         public static PlayerInputManager Instance { get => instance; }
 
@@ -44,8 +49,8 @@ namespace Tartarus
                 
                 playerControls = new PlayerControls();
                 playerControls.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
-               playerControls.CameraMovement.Movement.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
-
+                playerControls.CameraMovement.Movement.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
+                playerControls.PlayerActions.Dodge.performed += ctx => dodgeInput = true;
             }
 
             playerControls.Enable();
@@ -82,7 +87,14 @@ namespace Tartarus
             cameraVerticalInput = cameraInput.y;
         }
 
-
+        private void HandleDodgeInput()
+        {
+            if (dodgeInput)
+            {
+                dodgeInput = false;
+                // Call the dodge function
+            }
+        }
 
     }
 }
