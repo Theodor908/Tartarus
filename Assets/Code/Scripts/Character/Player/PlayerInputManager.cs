@@ -8,7 +8,8 @@ namespace Tartarus
     {
 
         PlayerControls playerControls;
-        static PlayerInputManager instance;
+        public static PlayerInputManager instance;
+        public PlayerManager playerManager;
 
         [Header("Player Move Input")]
         [SerializeField] Vector2 movementInput;
@@ -69,15 +70,17 @@ namespace Tartarus
             verticalInput = movementInput.y;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)); 
 
-            // Idle, Walking or Running
-            if(moveAmount <= 0.5 && moveAmount > 0)
-            {
-                moveAmount = 0.5f;
-            }
-            else if (moveAmount > 0.5 && moveAmount <= 1)
+            // Idle or Walking/Running
+            if (moveAmount > 0.5 && moveAmount <= 1)
             {
                 moveAmount = 1f;
             }
+
+            // Not locked-on
+            playerManager.playerAnimationManager.UpdateAnimatorMovementParameters(0,moveAmount);
+
+            // Locked-on
+            // to implemenet
 
         }
 

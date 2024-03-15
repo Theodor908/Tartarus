@@ -8,10 +8,11 @@ namespace Tartarus
     {
 
         public CharacterController characterController;
-
+        public Animator animator;
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
         }
 
         protected virtual void Update()

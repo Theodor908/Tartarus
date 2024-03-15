@@ -6,13 +6,15 @@ namespace Tartarus
 {
     public class PlayerManager : CharacterManager
     {
-        PlayerLocomotionManager playerLocomotionManager;
+        [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
+        [HideInInspector] public PlayerAnimationManager playerAnimationManager;
 
         protected override void Awake()
         {
             base.Awake();
 
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
+            playerAnimationManager = GetComponent<PlayerAnimationManager>();
         }
 
         protected override void Update()
