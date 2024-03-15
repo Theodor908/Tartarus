@@ -19,6 +19,7 @@ namespace Tartarus
 
         [Header("Player Action Input")]
         [SerializeField] bool dodgeInput = false;
+        [SerializeField] bool walkInput = false;
         
 
         [Header("Camera Move Input")]
@@ -60,9 +61,12 @@ namespace Tartarus
 
         private void Update()
         {
+            HandleDodgeInput();
             HandleMovementInput();
             HandleCameraMovementInput();
         }
+
+        #region MovementInput
 
         private void HandleMovementInput()
         {
@@ -90,14 +94,20 @@ namespace Tartarus
             cameraVerticalInput = cameraInput.y;
         }
 
+        #endregion
+
+        #region ActionInput
+
         private void HandleDodgeInput()
         {
             if (dodgeInput)
             {
                 dodgeInput = false;
-                // Call the dodge function
+                playerManager.playerLocomotionManager.AttemptToPerformDodge();
             }
         }
+
+        #endregion
 
     }
 }

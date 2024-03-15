@@ -46,6 +46,12 @@ namespace Tartarus
 
         public void HandleGroundedMovement()
         {
+
+            if(!playerManager.canMove)
+            {
+                return;
+            }
+
             GetVerticalAndHorizontalInputs();
             //Camera perspective movement
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
@@ -70,6 +76,11 @@ namespace Tartarus
         public void HandleRotation()
         {
 
+            if(!playerManager.canRotate)
+            {
+                return;
+            }
+
             Vector3 targetRotation = Vector3.zero;
             targetRotation = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
             targetRotation += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
@@ -90,6 +101,12 @@ namespace Tartarus
 
         public void AttemptToPerformDodge()
         {
+
+            if(playerManager.isInteracting)
+            {
+                return;
+            }
+
             // If moving then perform a roll
             if (moveAmount > 0)
             {
@@ -101,10 +118,15 @@ namespace Tartarus
                 Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
 
                 playerManager.transform.rotation = playerRotation;
+
+                playerManager.playerAnimationManager.PlayTargetAnimation("Roll_Forward_01", true, true);
+
             }
             else // Stationary
             {
-                // Perform a backestep, hardcoded maybe?
+                // Perform a backestep, hardcoded maybe? -- No
+
+                playerManager.playerAnimationManager.PlayTargetAnimation("Backstep_01", true, true);
             }
         }
 

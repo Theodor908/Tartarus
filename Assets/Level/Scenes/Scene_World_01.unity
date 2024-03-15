@@ -307,6 +307,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  isInteracting: 0
+  applyRootMotion: 0
+  canRotate: 1
+  canMove: 1
   playerLocomotionManager: {fileID: 0}
   playerAnimationManager: {fileID: 0}
 --- !u!114 &553948943
@@ -323,7 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalMovement: 0
   walkingSpeed: 2
-  runningSpeed: 5
+  runningSpeed: 4.5
   rotationSpeed: 15
 --- !u!143 &553948944
 CharacterController:

@@ -19,6 +19,17 @@ namespace Tartarus
             characterManager.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
         }
 
+        public virtual void PlayTargetAnimation(string targetAnimation, bool isInteracting, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
+        {
+            Debug.Log(applyRootMotion);
+            characterManager.applyRootMotion = applyRootMotion;
+            characterManager.animator.applyRootMotion = applyRootMotion;
+            characterManager.animator.CrossFade(targetAnimation, 0.2f);
+            characterManager.isInteracting = isInteracting; // Allow or stop certain actions while interacting
+            characterManager.canRotate = canRotate;
+            characterManager.canMove = canMove;
+        }
+
     }
 }
 
