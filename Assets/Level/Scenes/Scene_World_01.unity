@@ -328,6 +328,7 @@ MonoBehaviour:
   horizontalMovement: 0
   walkingSpeed: 2
   runningSpeed: 4.5
+  sprintingSpeed: 6
   rotationSpeed: 15
 --- !u!143 &553948944
 CharacterController:
@@ -2190,7 +2191,9 @@ MonoBehaviour:
   horizontalInput: 0
   verticalInput: 0
   moveAmount: 0
+  walkInput: 0
   dodgeInput: 0
+  sprintInput: 0
   cameraInput: {x: 0, y: 0}
   cameraVerticalInput: 0
   cameraHorizontalInput: 0

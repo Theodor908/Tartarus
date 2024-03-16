@@ -83,13 +83,22 @@
                     "id": "13893410-59a0-4cd5-9015-d1ebea9ccf58",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Walk",
                     "type": "PassThrough",
                     "id": "1eb4ce35-35d0-45dd-832d-d36679891ee0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "PassThrough",
+                    "id": "14bf24fe-7251-414f-ac97-d8cabea6846f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Hold",
@@ -116,6 +125,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Walk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff1031a8-81a2-4f55-b579-b6a5a4a35108",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -17,6 +17,7 @@ namespace Tartarus
         private Vector3 moveDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 5;
+        [SerializeField] float sprintingSpeed = 7;
         [SerializeField] float rotationSpeed = 15;
 
         [Header ("Dodge Settings")]
@@ -59,15 +60,19 @@ namespace Tartarus
             moveDirection.y = 0;
             moveDirection.Normalize();
 
-           if(PlayerInputManager.Instance.moveAmount > 0.5f )
+            if(PlayerInputManager.Instance.moveAmount > 1)
+            {
+                playerManager.characterController.Move(sprintingSpeed * Time.deltaTime * moveDirection);
+            }
+            else if(PlayerInputManager.Instance.moveAmount > 0.5f )
             {
                 playerManager.characterController.Move(runningSpeed * Time.deltaTime * moveDirection);
             }
-           else if(PlayerInputManager.Instance.moveAmount <= 0.5f && PlayerInputManager.Instance.moveAmount > 0)
+            else if(PlayerInputManager.Instance.moveAmount <= 0.5f && PlayerInputManager.Instance.moveAmount > 0)
             {
                 playerManager.characterController.Move(walkingSpeed * Time.deltaTime * moveDirection);
             }
-           else
+            else
             {
                 //Idle
             }
@@ -128,6 +133,21 @@ namespace Tartarus
 
                 playerManager.playerAnimationManager.PlayTargetAnimation("Backstep_01", true, true);
             }
+        }
+
+        public void HandleSprinting()
+        {
+            if(playerManager.isInteracting)
+            {
+                return;
+            }
+
+            // Stamina check
+            // Not stationary -> sprint allowed
+            // Stationary -> sprint not allowed
+
+
+
         }
 
     }
