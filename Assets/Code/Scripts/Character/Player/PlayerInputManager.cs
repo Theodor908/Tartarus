@@ -100,7 +100,7 @@ namespace Tartarus
             playerManager.playerAnimationManager.UpdateAnimatorMovementParameters(0,moveAmount);
 
             // Locked-on
-            // to implemenet
+            // to implement
 
         }
 
@@ -125,7 +125,8 @@ namespace Tartarus
 
         private void HandleSprintInput()
         {
-            if(sprintInput)
+            playerManager.isSprinting = sprintInput;
+            if (sprintInput)
             {
                 playerManager.playerLocomotionManager.HandleSprinting();
             }

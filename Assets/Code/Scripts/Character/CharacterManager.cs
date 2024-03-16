@@ -7,11 +7,18 @@ namespace Tartarus
     public class CharacterManager : MonoBehaviour
     {
 
-        [HideInInspector]public CharacterController characterController;
-        [HideInInspector]public Animator animator;
+        [HideInInspector] public CharacterController characterController;
+        [HideInInspector] public Animator animator;
+
+        [Header("Stats")]
+        public int vitality;
+        public float currentHealth;
+        public int endurance;
+        public float currentStamina;
 
         [Header("Flags")]
         public bool isInteracting = false;
+        public bool isSprinting = false;
         public bool applyRootMotion = false;
         public bool canRotate = true;
         public bool canMove = true;
@@ -20,6 +27,11 @@ namespace Tartarus
         {
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
+        }
+
+        protected virtual void Start()
+        {
+
         }
 
         protected virtual void Update()
@@ -31,6 +43,5 @@ namespace Tartarus
         {
 
         }
-
     }
 }

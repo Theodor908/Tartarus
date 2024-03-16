@@ -15,12 +15,23 @@ namespace Tartarus
 
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimationManager = GetComponent<PlayerAnimationManager>();
+
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            currentStamina = PlayerStatsManager.instance.CalculateStaminaBasedOnEnduranceLevel(endurance);
+            PlayerUIManager.instance.playerUIHudManager.setMaxStaminaValue(currentStamina);
         }
 
         protected override void Update()
         {
             base.Update();
+            //Handle movement
             playerLocomotionManager.HandleAllMovement();
+            // Regen stamina
+            PlayerStatsManager.instance.RegenerateStamina();
         }
 
         protected override void LateUpdate()

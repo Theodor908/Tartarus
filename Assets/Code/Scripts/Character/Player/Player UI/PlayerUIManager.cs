@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tartarus;
 using UnityEngine;
 
 public class PlayerUIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    
+    public static PlayerUIManager instance;
+    [HideInInspector] public PlayerUIHUDManager playerUIHudManager;
+
+    private void Awake()
     {
-        
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+
+        playerUIHudManager = GetComponentInChildren<PlayerUIHUDManager>();
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

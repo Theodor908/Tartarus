@@ -19,6 +19,8 @@ namespace Tartarus
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float sprintingSpeed = 7;
         [SerializeField] float rotationSpeed = 15;
+        [SerializeField] float dodgeStaminaCost = 0.2f;
+        [SerializeField] float sprintStaminaCost = 0.2f;
 
         [Header ("Dodge Settings")]
         private Vector3 rollDirection;
@@ -60,7 +62,7 @@ namespace Tartarus
             moveDirection.y = 0;
             moveDirection.Normalize();
 
-            if(PlayerInputManager.Instance.moveAmount > 1)
+            if(PlayerInputManager.Instance.moveAmount > 1 && playerManager.isSprinting)
             {
                 playerManager.characterController.Move(sprintingSpeed * Time.deltaTime * moveDirection);
             }
@@ -72,10 +74,7 @@ namespace Tartarus
             {
                 playerManager.characterController.Move(walkingSpeed * Time.deltaTime * moveDirection);
             }
-            else
-            {
-                //Idle
-            }
+
         }
 
         public void HandleRotation()
@@ -112,7 +111,17 @@ namespace Tartarus
                 return;
             }
 
+            if (playerManager.currentStamina < dodgeStaminaCost * Time.deltaTime)
+            {
+                return;
+            }
+
             // If moving then perform a roll
+
+            // Stamina cost
+            playerManager.currentStamina -= dodgeStaminaCost * Time.deltaTime;
+            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
+
             if (moveAmount > 0)
             {
                 rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
@@ -139,14 +148,27 @@ namespace Tartarus
         {
             if(playerManager.isInteracting)
             {
-                return;
+                playerManager.isSprinting = false;
             }
 
-            // Stamina check
-            // Not stationary -> sprint allowed
-            // Stationary -> sprint not allowed
+            // No sprinting if no stamina left
 
+            if(playerManager.currentStamina < sprintStaminaCost * Time.deltaTime)
+            {
+                playerManager.isSprinting = false;
+            }
 
+            if (moveAmount < 0.5f && playerManager.currentStamina < dodgeStaminaCost * Time.deltaTime)
+            {
+                playerManager.isSprinting = false;
+            }
+
+            // Stamina cost
+            if (playerManager.isSprinting)
+            {
+                playerManager.currentStamina -= sprintStaminaCost * Time.deltaTime;
+               PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
+            }
 
         }
 
