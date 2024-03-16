@@ -18,8 +18,9 @@ namespace Tartarus
         public float moveAmount;
 
         [Header("Player Action Input")]
-        [SerializeField] bool dodgeInput = false;
         [SerializeField] bool walkInput = false;
+        [SerializeField] bool dodgeInput = false;
+        [SerializeField] bool sprintInput = false;
         
 
         [Header("Camera Move Input")]
@@ -52,7 +53,14 @@ namespace Tartarus
                 playerControls = new PlayerControls();
                 playerControls.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
                 playerControls.CameraMovement.Movement.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
+
+                playerControls.PlayerActions.Walk.performed += ctx => walkInput = true;
+                playerControls.PlayerActions.Walk.canceled += ctx => walkInput = false;
+
                 playerControls.PlayerActions.Dodge.performed += ctx => dodgeInput = true;
+
+                playerControls.PlayerActions.Sprint.performed += ctx => sprintInput = true;
+                playerControls.PlayerActions.Sprint.canceled += ctx => sprintInput = false;
             }
 
             playerControls.Enable();
@@ -62,6 +70,7 @@ namespace Tartarus
         private void Update()
         {
             HandleDodgeInput();
+            HandleSprintInput();
             HandleMovementInput();
             HandleCameraMovementInput();
         }
@@ -74,10 +83,17 @@ namespace Tartarus
             verticalInput = movementInput.y;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)); 
 
-            // Idle or Walking/Running
-            if (moveAmount > 0.5 && moveAmount <= 1)
+            if(moveAmount > 0 && walkInput)
+            {
+                moveAmount = 0.5f;
+            }
+            else if(moveAmount > 0 && !sprintInput)
             {
                 moveAmount = 1f;
+            }
+            else if(moveAmount > 0 && sprintInput)
+            {
+                moveAmount = 2f;
             }
 
             // Not locked-on
@@ -104,6 +120,14 @@ namespace Tartarus
             {
                 dodgeInput = false;
                 playerManager.playerLocomotionManager.AttemptToPerformDodge();
+            }
+        }
+
+        private void HandleSprintInput()
+        {
+            if(sprintInput)
+            {
+                playerManager.playerLocomotionManager.HandleSprinting();
             }
         }
 

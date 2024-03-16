@@ -105,13 +105,22 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""id"": ""13893410-59a0-4cd5-9015-d1ebea9ccf58"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Walk"",
                     ""type"": ""PassThrough"",
                     ""id"": ""1eb4ce35-35d0-45dd-832d-d36679891ee0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""14bf24fe-7251-414f-ac97-d8cabea6846f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Hold"",
@@ -138,6 +147,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ff1031a8-81a2-4f55-b579-b6a5a4a35108"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -181,6 +201,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerActions_Walk = m_PlayerActions.FindAction("Walk", throwIfNotFound: true);
+        m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
         // Camera Movement
         m_CameraMovement = asset.FindActionMap("Camera Movement", throwIfNotFound: true);
         m_CameraMovement_Movement = m_CameraMovement.FindAction("Movement", throwIfNotFound: true);
@@ -293,12 +314,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_Dodge;
     private readonly InputAction m_PlayerActions_Walk;
+    private readonly InputAction m_PlayerActions_Sprint;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
         public InputAction @Walk => m_Wrapper.m_PlayerActions_Walk;
+        public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -314,6 +337,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Walk.started += instance.OnWalk;
             @Walk.performed += instance.OnWalk;
             @Walk.canceled += instance.OnWalk;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -324,6 +350,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Walk.started -= instance.OnWalk;
             @Walk.performed -= instance.OnWalk;
             @Walk.canceled -= instance.OnWalk;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -395,6 +424,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnDodge(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
     }
     public interface ICameraMovementActions
     {
