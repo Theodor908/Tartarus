@@ -45,6 +45,7 @@ namespace Tartarus
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
+            LoadAllCharacterSlots();
         }
 
         private void Update()
@@ -62,11 +63,12 @@ namespace Tartarus
             }
         }
 
-        public void DecideFileNameBasedOnCharacterSlotUsed()
+        public string DecideFileNameBasedOnCharacterSlotUsed(CharacterSlot characterSlot)
         {
+            string fileName = "";
             for(int i = 0; i < characterSlots.Length; i++)
             {
-                if(currentCharacterSlot == (CharacterSlot)i)
+                if(characterSlot == (CharacterSlot)i)
                 {
                     fileName = "CharacterSlot_" + i;
                     Debug.Log("File name: " + fileName);
@@ -74,18 +76,19 @@ namespace Tartarus
 
                 }
             }
+            return fileName;
         }
 
         public void  CreateNewGame()
         {
-            DecideFileNameBasedOnCharacterSlotUsed();
+            fileName = DecideFileNameBasedOnCharacterSlotUsed(currentCharacterSlot);
             currentCharacterData = new CharacterSaveData();
 
         }
 
         public void LoadGame()
         {
-            DecideFileNameBasedOnCharacterSlotUsed();
+            fileName = DecideFileNameBasedOnCharacterSlotUsed(currentCharacterSlot);
             saveFileDataWriter = new SaveFile();
             saveFileDataWriter.saveDataPath = Application.persistentDataPath; // Works on all 
             saveFileDataWriter.saveFileName = fileName;
@@ -96,7 +99,7 @@ namespace Tartarus
 
         public void SaveGame()
         {
-            DecideFileNameBasedOnCharacterSlotUsed();
+            fileName = DecideFileNameBasedOnCharacterSlotUsed(currentCharacterSlot);
             saveFileDataWriter = new SaveFile();
             saveFileDataWriter.saveDataPath = Application.persistentDataPath; // Works on all
             saveFileDataWriter.saveFileName = fileName;
@@ -106,6 +109,25 @@ namespace Tartarus
 
 
             saveFileDataWriter.CreateNewSaveFile(currentCharacterData);
+        }
+
+        // Load everything when starting the game
+
+        private void LoadAllCharacterSlots()
+        {
+            saveFileDataWriter = new SaveFile();
+            saveFileDataWriter.saveDataPath = Application.persistentDataPath;
+
+            for(int i = 0; i < characterSlots.Length; i++)
+            {
+                saveFileDataWriter.saveFileName = DecideFileNameBasedOnCharacterSlotUsed((CharacterSlot)i);
+                if(saveFileDataWriter.CheckForSaveFile())
+                {
+                    Debug.Log("Loading character slot: " + i);
+                    characterSlots[i] = saveFileDataWriter.LoadSaveFile();
+                } 
+            }
+
         }
 
         public IEnumerator LoadWorldScene()
