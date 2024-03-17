@@ -8,7 +8,8 @@ namespace Tartarus
     {
         public void StartNewGame()
         {
-            StartCoroutine(WorldSaveManager.instance.LoadNewGame());
+            StartCoroutine(WorldSaveManager.instance.LoadWorldScene());
         }
     }
 }
+    

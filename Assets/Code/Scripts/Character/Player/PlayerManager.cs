@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using UnityEngine;
 
 namespace Tartarus
@@ -8,6 +9,9 @@ namespace Tartarus
     {
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimationManager playerAnimationManager;
+        [HideInInspector] public PlayerStatsManager playerStatsManager;
+
+        public string characterName = "Player";
 
         protected override void Awake()
         {
@@ -15,6 +19,7 @@ namespace Tartarus
 
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimationManager = GetComponent<PlayerAnimationManager>();
+            playerStatsManager = GetComponent<PlayerStatsManager>();
 
         }
 
@@ -31,13 +36,26 @@ namespace Tartarus
             //Handle movement
             playerLocomotionManager.HandleAllMovement();
             // Regen stamina
-            PlayerStatsManager.instance.RegenerateStamina();
+            playerStatsManager.RegenerateStamina();
         }
 
         protected override void LateUpdate()
         {
             base.LateUpdate();
             PlayerCamera.instance.HandleAllCameraActions();
+        }
+
+        public void SaveGameToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            currentCharacterData.characterName = characterName;
+            currentCharacterData.xPosition = transform.position.x;
+            currentCharacterData.yPosition = transform.position.y;
+            currentCharacterData.zPosition = transform.position.z;
+        }
+        public void LoadGameFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            characterName = currentCharacterData.characterName;
+            transform.position = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
         }
 
     }
