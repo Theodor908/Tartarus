@@ -16,6 +16,21 @@ namespace Tartarus
 
         [Header ("Pop-up objects")]
         [SerializeField] GameObject noFreeCharacterSlotsPopUp;
+        [SerializeField] GameObject deleteCharacterSlotPopUp;
+
+        [Header("Buttons")]
+        [SerializeField] Button mainMenuPressStartButton;
+        [SerializeField] Button loadMenuReturnButton;
+        [SerializeField] Button maineMenuLoadGameButton;
+        [SerializeField] Button mainMenuNewGameButton;
+        [SerializeField] Button mainMenuNoFreeCharacterSlotsButton;
+        [SerializeField] Button deleteCharacterPopUpConfirmButton;
+
+        [Header("Save slots")]
+        public CharacterSlot currentSelectedSlot = CharacterSlot.NO_CHARACTER_SLOT;
+
+        [Header("Title screen inputs")]
+        [SerializeField] bool deleteCharacterSlot;
 
         private void Awake()
         {
@@ -27,12 +42,24 @@ namespace Tartarus
             {
                 Destroy(gameObject);
             }
+
+            mainMenuPressStartButton.Select();
+
         }
 
         public void StartNewGame()
         {
 
             WorldSaveManager.instance.AttemptToCreateNewGame();
+        }
+
+        public void OpenNewSaveOrLoadMenu()
+        {
+            mainMenuPressStartButton.gameObject.SetActive(false);
+            titleScreenMainMenu.SetActive(true);
+
+            mainMenuNewGameButton.Select();
+
         }
 
         public void OpenLoadGameMenu()
@@ -43,7 +70,7 @@ namespace Tartarus
             titleScreenMainMenu.SetActive(false);
             titleSreenLoadMenu.SetActive(true);
 
-
+            loadMenuReturnButton.Select();
 
         }
 
@@ -55,18 +82,67 @@ namespace Tartarus
             titleScreenMainMenu.SetActive(true);
             titleSreenLoadMenu.SetActive(false);
 
+            mainMenuNewGameButton.Select();
+
         }
 
         public void DisplayNoFreeCharacterSlotsPopUp()
         {
+            titleScreenMainMenu.SetActive(false);
             noFreeCharacterSlotsPopUp.SetActive(true);
+            mainMenuNoFreeCharacterSlotsButton.Select();
+
         }
 
         public void CloseNoFreeCharacterSlotsPopUp()
         {
-            Debug.Log("Called");
             noFreeCharacterSlotsPopUp.SetActive(false);
+            titleScreenMainMenu.SetActive(true);
+            mainMenuNewGameButton.Select();
         }
+
+        #region Character Slot
+
+        public void SelectCharacterSlot(CharacterSlot characterSlot)
+        {
+            currentSelectedSlot = characterSlot;
+            Debug.Log(characterSlot.ToString() + " is selected");
+        }
+
+        public void SelectNoSlot()
+        {
+            currentSelectedSlot = CharacterSlot.NO_CHARACTER_SLOT;
+        }
+
+        public void AttemptToDeleteCharacterSlot()
+        {
+
+            if(currentSelectedSlot != CharacterSlot.NO_CHARACTER_SLOT)
+            {
+                deleteCharacterSlotPopUp.SetActive(true);
+                deleteCharacterPopUpConfirmButton.Select();
+            }
+        }
+
+        public void DeleteCharacterSlot()
+        {
+           deleteCharacterSlotPopUp.SetActive(false);
+            WorldSaveManager.instance.DeleteGame(currentSelectedSlot);
+
+            // Refersh the load menu
+            titleSreenLoadMenu.SetActive(false);
+            titleSreenLoadMenu.SetActive(true);  
+
+            loadMenuReturnButton.Select();
+        }
+
+        public void CloseDeleteCharacterPopUp()
+        {
+            deleteCharacterSlotPopUp.SetActive(false);
+            loadMenuReturnButton.Select();
+        }
+
+        #endregion
     }
 }
     

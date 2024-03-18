@@ -52,5 +52,10 @@ namespace Tartarus
             WorldSaveManager.instance.LoadGame();
         }
 
+        public void SelectCurrentSlot()
+        {
+            TitleScreenManager.instance.SelectCharacterSlot(characterSlot); 
+        }
+
     }
 }

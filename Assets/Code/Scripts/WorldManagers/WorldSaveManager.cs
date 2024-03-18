@@ -130,6 +130,14 @@ namespace Tartarus
             saveFileDataWriter.CreateNewSaveFile(currentCharacterData);
         }
 
+        public void DeleteGame(CharacterSlot characterSlot)
+        {
+            saveFileDataWriter = new SaveFile();
+            saveFileDataWriter.saveDataPath = Application.persistentDataPath; // Works on all
+            saveFileDataWriter.saveFileName = DecideFileNameBasedOnCharacterSlotUsed(characterSlot);    
+            saveFileDataWriter.DeleteSaveFile();
+        }
+
         // Load everything when starting the game
 
         private void LoadAllCharacterSlots()

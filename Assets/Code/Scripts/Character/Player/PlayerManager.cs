@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Tartarus
 {
@@ -58,6 +59,7 @@ namespace Tartarus
 
         public void SaveGameToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
         {
+            currentCharacterData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
             currentCharacterData.characterName = characterName;
             currentCharacterData.xPosition = transform.position.x;
             currentCharacterData.yPosition = transform.position.y;
