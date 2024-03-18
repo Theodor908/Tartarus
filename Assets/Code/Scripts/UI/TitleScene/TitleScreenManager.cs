@@ -8,13 +8,31 @@ namespace Tartarus
     public class TitleScreenManager : MonoBehaviour
     {
 
+        public static TitleScreenManager instance;
+
         [Header ("Menu objects")]
         [SerializeField] GameObject titleScreenMainMenu;
         [SerializeField] GameObject titleSreenLoadMenu;
 
+        [Header ("Pop-up objects")]
+        [SerializeField] GameObject noFreeCharacterSlotsPopUp;
+
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
         public void StartNewGame()
         {
-            StartCoroutine(WorldSaveManager.instance.LoadWorldScene());
+
+            WorldSaveManager.instance.AttemptToCreateNewGame();
         }
 
         public void OpenLoadGameMenu()
@@ -39,6 +57,16 @@ namespace Tartarus
 
         }
 
+        public void DisplayNoFreeCharacterSlotsPopUp()
+        {
+            noFreeCharacterSlotsPopUp.SetActive(true);
+        }
+
+        public void CloseNoFreeCharacterSlotsPopUp()
+        {
+            Debug.Log("Called");
+            noFreeCharacterSlotsPopUp.SetActive(false);
+        }
     }
 }
     

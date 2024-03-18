@@ -46,5 +46,11 @@ namespace Tartarus
 
         }
 
+        public void LoadGameFromCharacterSlot()
+        {
+            WorldSaveManager.instance.currentCharacterSlot = characterSlot;
+            WorldSaveManager.instance.LoadGame();
+        }
+
     }
 }

@@ -11,11 +11,21 @@ namespace Tartarus
         [HideInInspector] public PlayerAnimationManager playerAnimationManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
 
-        public string characterName = "Player";
+        public string characterName = "";
 
         protected override void Awake()
         {
             base.Awake();
+            WorldSaveManager.instance.playerManager = this;
+
+            if(WorldSaveManager.instance.playerManager == this)
+            {
+                Debug.Log("PlayerManager is set to WorldSaveManager");
+            }
+            else
+            {
+                Debug.Log("PlayerManager is not set to WorldSaveManager");
+            }
 
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimationManager = GetComponent<PlayerAnimationManager>();
@@ -26,6 +36,7 @@ namespace Tartarus
         protected override void Start()
         {
             base.Start();
+
             currentStamina = PlayerStatsManager.instance.CalculateStaminaBasedOnEnduranceLevel(endurance);
             PlayerUIManager.instance.playerUIHudManager.setMaxStaminaValue(currentStamina);
         }

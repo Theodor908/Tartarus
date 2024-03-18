@@ -12,7 +12,7 @@ namespace Tartarus
     public class CharacterSaveData
     {
         [Header("Character Name")]
-        public string characterName;
+        public string characterName = "Blank";
 
         [Header("Total time played")]
         public float secondsPlayed;

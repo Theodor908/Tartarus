@@ -9,7 +9,7 @@ namespace Tartarus
     {
 
         public static WorldSaveManager instance;
-        [SerializeField] PlayerManager playerManager;
+        public PlayerManager playerManager;
 
         [Header("SAVE/LOAD")]
         [SerializeField] bool saveGame;
@@ -79,10 +79,30 @@ namespace Tartarus
             return fileName;
         }
 
-        public void  CreateNewGame()
+        public void  AttemptToCreateNewGame()
         {
-            fileName = DecideFileNameBasedOnCharacterSlotUsed(currentCharacterSlot);
-            currentCharacterData = new CharacterSaveData();
+
+            saveFileDataWriter = new SaveFile();
+            saveFileDataWriter.saveDataPath = Application.persistentDataPath; // Works on all
+            // Verify if we can create a new save file
+
+            for (int i = 0; i < characterSlots.Length; i++)
+            {
+                saveFileDataWriter.saveFileName = DecideFileNameBasedOnCharacterSlotUsed((CharacterSlot)i);
+               
+                if(!saveFileDataWriter.CheckForSaveFile())
+                {
+                    currentCharacterSlot = (CharacterSlot)i;
+                    currentCharacterData = new CharacterSaveData();
+                    StartCoroutine(LoadWorldScene());
+                    return;
+                }
+
+            }
+
+            // No free slots
+
+            TitleScreenManager.instance.DisplayNoFreeCharacterSlotsPopUp();
 
         }
 
@@ -93,7 +113,6 @@ namespace Tartarus
             saveFileDataWriter.saveDataPath = Application.persistentDataPath; // Works on all 
             saveFileDataWriter.saveFileName = fileName;
             currentCharacterData = saveFileDataWriter.LoadSaveFile();
-
             StartCoroutine(LoadWorldScene());
         }
 
@@ -133,6 +152,11 @@ namespace Tartarus
         public IEnumerator LoadWorldScene()
         {
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
+            while(!loadOperation.isDone)
+            {
+                yield return null;
+            }
+            playerManager.LoadGameFromCurrentCharacterData(ref currentCharacterData);
             yield return null;
         }
 
