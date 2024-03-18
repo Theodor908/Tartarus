@@ -318,6 +318,8 @@ MonoBehaviour:
   canMove: 1
   playerLocomotionManager: {fileID: 0}
   playerAnimationManager: {fileID: 0}
+  playerStatsManager: {fileID: 0}
+  characterName: 
 --- !u!114 &553948943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,6 +337,7 @@ MonoBehaviour:
   runningSpeed: 4.5
   sprintingSpeed: 7
   rotationSpeed: 15
+  dodgeStaminaCost: 0.2
   sprintStaminaCost: 2
 --- !u!143 &553948944
 CharacterController:
@@ -386,6 +389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7330d54dfbbdd2d4e82fab5542c5ef70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  staminaRegenDelay: 3
+  staminaRegenRate: 1
 --- !u!43 &673603506
 Mesh:
   m_ObjectHideFlags: 0
@@ -2217,6 +2222,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1887484663477967535, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0.0186
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887484663477967535, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 4.6777
+      objectReference: {fileID: 0}
     - target: {fileID: 4563507387222362498, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2284,6 +2297,14 @@ PrefabInstance:
     - target: {fileID: 5573848770240785654, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6328104538931352102, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -0.0046
+      objectReference: {fileID: 0}
+    - target: {fileID: 6328104538931352102, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 4.6968
       objectReference: {fileID: 0}
     - target: {fileID: 6534670541709663125, guid: 4c8c14b74ce144c4b861646638395f93, type: 3}
       propertyPath: m_AnchorMax.y

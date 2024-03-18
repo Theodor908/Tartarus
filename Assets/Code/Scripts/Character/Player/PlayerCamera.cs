@@ -67,7 +67,7 @@ namespace Tartarus
         private void HandleCameraRotation()
         {
             // Rotate the camera around the player
-            // If locked-on to an enemy, rotate towards the enemy
+            // If locked-on to an enemy, rotate towards the enemy -- to implement
             
             // Rotate the camera left and right
             leftAndRightLookAngle += PlayerInputManager.Instance.cameraHorizontalInput * leftAndRightRotationSpeed * Time.deltaTime;
