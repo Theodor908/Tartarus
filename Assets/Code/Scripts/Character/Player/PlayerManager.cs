@@ -18,7 +18,7 @@ namespace Tartarus
         {
             base.Awake();
             WorldSaveManager.instance.playerManager = this;
-
+            // Check if WorldSaveManager is set to PlayerManager
             if(WorldSaveManager.instance.playerManager == this)
             {
                 Debug.Log("PlayerManager is set to WorldSaveManager");

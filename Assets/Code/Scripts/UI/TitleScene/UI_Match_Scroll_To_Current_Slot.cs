@@ -25,6 +25,7 @@ namespace Tartarus
                 currentSelectedTransform = currentSelected.GetComponent<RectTransform>();
                 SnapTo(currentSelectedTransform);
             }
+    
         }
 
         private void SnapTo(RectTransform target)

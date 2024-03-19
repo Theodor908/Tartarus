@@ -32,7 +32,7 @@ namespace Tartarus
 
         public virtual void RegenerateStamina()
         {
-            if(characterManager.isSprinting || characterManager.isInteracting)
+            if(characterManager.isSprinting || characterManager.isInteracting || characterManager.isJumping)
             {
                 ResetStaminaRegenTimer();
                 return;

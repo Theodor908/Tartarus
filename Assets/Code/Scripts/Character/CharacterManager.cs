@@ -15,9 +15,12 @@ namespace Tartarus
         public float currentHealth;
         public int endurance;
         public float currentStamina;
+        public bool consumesStamina = false;
 
         [Header("Flags")]
         public bool isInteracting = false;
+        public bool isGrounded = true;
+        public bool isJumping = false;
         public bool isSprinting = false;
         public bool applyRootMotion = false;
         public bool canRotate = true;
@@ -36,7 +39,7 @@ namespace Tartarus
 
         protected virtual void Update()
         {
-
+            animator.SetBool("isGrounded", isGrounded);
         }
 
         protected virtual void LateUpdate()
