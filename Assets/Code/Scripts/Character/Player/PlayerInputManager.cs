@@ -20,6 +20,7 @@ namespace Tartarus
         [Header("Player Action Input")]
         [SerializeField] bool walkInput = false;
         [SerializeField] bool dodgeInput = false;
+        [SerializeField] bool jumpInput = false;
         [SerializeField] bool sprintInput = false;
         
 
@@ -49,16 +50,18 @@ namespace Tartarus
         {
             if (playerControls == null)
             {
-                
+                // Movement
                 playerControls = new PlayerControls();
                 playerControls.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
                 playerControls.CameraMovement.Movement.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
-
+                // Walk
                 playerControls.PlayerActions.Walk.performed += ctx => walkInput = true;
                 playerControls.PlayerActions.Walk.canceled += ctx => walkInput = false;
-
+                // Dodge
                 playerControls.PlayerActions.Dodge.performed += ctx => dodgeInput = true;
-
+                // Jump
+                playerControls.PlayerActions.Jump.performed += ctx => jumpInput = true;
+                // Sprint
                 playerControls.PlayerActions.Sprint.performed += ctx => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += ctx => sprintInput = false;
             }
@@ -69,6 +72,7 @@ namespace Tartarus
 
         private void Update()
         {
+            HandleJumpInput();
             HandleDodgeInput();
             HandleSprintInput();
             HandleMovementInput();
@@ -129,6 +133,15 @@ namespace Tartarus
             if (sprintInput)
             {
                 playerManager.playerLocomotionManager.HandleSprinting();
+            }
+        }
+
+        private void HandleJumpInput()
+        {
+            if(jumpInput)
+            {
+                jumpInput = false;
+                playerManager.playerLocomotionManager.AttemptToPerformJump();
             }
         }
 

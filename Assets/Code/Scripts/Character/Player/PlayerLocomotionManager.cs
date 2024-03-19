@@ -19,11 +19,18 @@ namespace Tartarus
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float sprintingSpeed = 7;
         [SerializeField] float rotationSpeed = 15;
-        [SerializeField] float dodgeStaminaCost = 0.2f;
-        [SerializeField] float sprintStaminaCost = 0.2f;
+        [SerializeField] float sprintStaminaCost = 2;
 
         [Header ("Dodge Settings")]
         private Vector3 rollDirection;
+        [SerializeField] float dodgeStaminaCost = 5;
+
+        [Header ("Jump Settings")]
+        [SerializeField] float jumpStaminaCost = 5;
+        [SerializeField] float jumpHeight = 3;
+        private Vector3 jumpDirection;
+        [SerializeField] float jumpForwardSpeed = 5;
+        [SerializeField] float freeFallSpeed = 2;
 
         protected override void Awake()
         {
@@ -34,10 +41,9 @@ namespace Tartarus
         public void HandleAllMovement()
         {
             HandleGroundedMovement();
-            //Jump
+            HandleJumpMovement();
             HandleRotation();
-            //Fall
-            //...
+            HandleFreeFallMovement();
         }
 
         private void GetVerticalAndHorizontalInputs()
@@ -77,6 +83,31 @@ namespace Tartarus
 
         }
 
+        public void HandleJumpMovement()
+        {
+
+            if(playerManager.isJumping)
+            {
+                playerManager.characterController.Move(jumpDirection * Time.deltaTime * jumpForwardSpeed);
+            }
+
+        }
+
+        public void HandleFreeFallMovement()
+        {
+
+            if(!playerManager.isGrounded)
+            {
+                Vector3 freeFallDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                freeFallDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                freeFallDirection.y = 0;
+
+                playerManager.characterController.Move(freeFallDirection * Time.deltaTime * freeFallSpeed);
+
+            }
+
+        }
+
         public void HandleRotation()
         {
 
@@ -111,6 +142,11 @@ namespace Tartarus
                 return;
             }
 
+            if(playerManager.isJumping)
+            {
+                return;
+            }
+
             if (playerManager.currentStamina < dodgeStaminaCost * Time.deltaTime)
             {
                 return;
@@ -119,7 +155,7 @@ namespace Tartarus
             // If moving then perform a roll
 
             // Stamina cost
-            playerManager.currentStamina -= dodgeStaminaCost * Time.deltaTime;
+            playerManager.currentStamina -= dodgeStaminaCost;
             PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
 
             if (moveAmount > 0)
@@ -144,6 +180,74 @@ namespace Tartarus
             }
         }
 
+        public void AttemptToPerformJump()
+        {
+            // Check for already performing actions, including jumping, interacting, etc and check if grounded
+            if (playerManager.isInteracting)
+            {
+                return;
+            }
+
+            if(playerManager.isJumping)
+            {
+                return;
+            }
+
+            if(!playerManager.isGrounded)
+            {
+                return;
+            }
+
+            if (playerManager.currentStamina < jumpStaminaCost)
+            {
+                return;
+            }
+
+            // Stamina cost
+            playerManager.currentStamina -= jumpStaminaCost;
+            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
+
+            playerManager.playerAnimationManager.PlayTargetAnimation("Jump_Start", false);
+
+            playerManager.isJumping = true;
+
+            // Hard coded jump
+            //ApplyJumpVelocity();
+
+            jumpDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+            jumpDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+            jumpDirection.y = 0;
+
+            Debug.Log(jumpDirection);
+
+            // Handle movement during jump
+            if(jumpDirection != Vector3.zero)
+            {
+                if (playerManager.isSprinting)
+                {
+                    Debug.Log("Sprint jump");
+                    jumpDirection *= 1; // Sprint jump
+                }
+                else if (moveAmount >= 1)
+                {
+                    Debug.Log("Run jump");
+                    jumpDirection *= 0.75f; // Run jump
+                }
+                else if (moveAmount < 1)
+                {
+                    Debug.Log("Walk jump");
+                    jumpDirection *= 0.25f; // Walk jump
+                }
+            }
+
+        }
+
+        public void ApplyJumpVelocity()
+        {
+            yVelocity.y = Mathf.Sqrt(-2 * gravityForce * jumpHeight);
+
+        }
+
         public void HandleSprinting()
         {
             if(playerManager.isInteracting)
@@ -158,7 +262,7 @@ namespace Tartarus
                 playerManager.isSprinting = false;
             }
 
-            if (moveAmount < 0.5f && playerManager.currentStamina < dodgeStaminaCost * Time.deltaTime)
+            if (moveAmount < 0.5f && playerManager.currentStamina < sprintStaminaCost * Time.deltaTime)
             {
                 playerManager.isSprinting = false;
             }
