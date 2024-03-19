@@ -1249,6 +1249,7 @@ GameObject:
   - component: {fileID: 464922655}
   - component: {fileID: 464922657}
   - component: {fileID: 464922656}
+  - component: {fileID: 464922658}
   m_Layer: 5
   m_Name: Mask
   m_TagString: Untagged
@@ -1314,6 +1315,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464922654}
   m_CullTransparentMesh: 1
+--- !u!114 &464922658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464922654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 0
 --- !u!1001 &468389646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1719,7 +1733,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2030736564}
   m_HandleRect: {fileID: 2030736563}
   m_Direction: 3
-  m_Value: 0.9999999
+  m_Value: 1
   m_Size: 0.33885098
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5075,8 +5089,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 544896280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.000000059604645}
-  m_AnchorMax: {x: 1, y: 0.33885103}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.33885098}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5486,9 +5500,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.5647059, g: 0.5647059, b: 0.5647059, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 1, g: 0, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.1393305, g: 1, b: 0, a: 1}
+    m_PressedColor: {r: 0.9056604, g: 0.2691349, b: 0.2691349, a: 1}
     m_SelectedColor: {r: 1, g: 0.3915094, b: 0.3915094, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1

@@ -19,7 +19,7 @@ namespace Tartarus
         {
             currentSelected = EventSystem.current.currentSelectedGameObject;
 
-            if(currentSelected != previouslySelected)
+            if(currentSelected != null && currentSelected != previouslySelected)
             {
                 previouslySelected = currentSelected;
                 currentSelectedTransform = currentSelected.GetComponent<RectTransform>();

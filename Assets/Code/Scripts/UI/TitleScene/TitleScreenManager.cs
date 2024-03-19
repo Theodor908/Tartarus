@@ -47,6 +47,8 @@ namespace Tartarus
 
         }
 
+        #region Menu Navigation
+
         public void StartNewGame()
         {
 
@@ -86,6 +88,10 @@ namespace Tartarus
 
         }
 
+        #endregion
+
+        #region Pop-ups
+
         public void DisplayNoFreeCharacterSlotsPopUp()
         {
             titleScreenMainMenu.SetActive(false);
@@ -100,6 +106,8 @@ namespace Tartarus
             titleScreenMainMenu.SetActive(true);
             mainMenuNewGameButton.Select();
         }
+
+        #endregion
 
         #region Character Slot
 
