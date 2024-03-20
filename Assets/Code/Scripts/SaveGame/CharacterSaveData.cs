@@ -6,8 +6,6 @@ namespace Tartarus
 {
 
     [System.Serializable]
-    // Data is referenced for every save file
-    // No monobehaviour
     // Reference of data
     public class CharacterSaveData
     {
@@ -25,8 +23,6 @@ namespace Tartarus
         public float xPosition;
         public float yPosition;
         public float zPosition;
-
-
 
     }
 }

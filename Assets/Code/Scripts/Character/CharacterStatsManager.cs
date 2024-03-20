@@ -23,7 +23,7 @@ namespace Tartarus
         public int CalculateStaminaBasedOnEnduranceLevel(int endurance)
         {
 
-            float stamina = 10;
+            float stamina = 100;
             stamina += endurance * 10;
 
             return Mathf.RoundToInt(stamina);
