@@ -26,11 +26,11 @@ namespace Tartarus
         [SerializeField] float dodgeStaminaCost = 5;
 
         [Header ("Jump Settings")]
-        [SerializeField] float jumpStaminaCost = 5;
-        [SerializeField] float jumpHeight = 3;
+        [SerializeField] float jumpStaminaCost = 2;
+        [SerializeField] float jumpHeight = 1.25f;
         private Vector3 jumpDirection;
-        [SerializeField] float jumpForwardSpeed = 5;
-        [SerializeField] float freeFallSpeed = 2;
+        [SerializeField] float jumpForwardSpeed = 3f;
+        [SerializeField] float freeFallSpeed = 5;
 
         protected override void Awake()
         {
@@ -100,7 +100,6 @@ namespace Tartarus
             {
                 Vector3 freeFallDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
                 freeFallDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
-                freeFallDirection.y = 0;
 
                 playerManager.characterController.Move(freeFallDirection * Time.deltaTime * freeFallSpeed);
 
@@ -156,7 +155,6 @@ namespace Tartarus
 
             // Stamina cost
             playerManager.currentStamina -= dodgeStaminaCost;
-            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
 
             if (moveAmount > 0)
             {
@@ -205,7 +203,6 @@ namespace Tartarus
 
             // Stamina cost
             playerManager.currentStamina -= jumpStaminaCost;
-            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
 
             playerManager.playerAnimationManager.PlayTargetAnimation("Jump_Start", false);
 
@@ -216,26 +213,20 @@ namespace Tartarus
 
             jumpDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
             jumpDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
-            jumpDirection.y = 0;
-
-            Debug.Log(jumpDirection);
 
             // Handle movement during jump
             if(jumpDirection != Vector3.zero)
             {
                 if (playerManager.isSprinting)
                 {
-                    Debug.Log("Sprint jump");
                     jumpDirection *= 1; // Sprint jump
                 }
                 else if (moveAmount >= 1)
                 {
-                    Debug.Log("Run jump");
                     jumpDirection *= 0.75f; // Run jump
                 }
                 else if (moveAmount < 1)
                 {
-                    Debug.Log("Walk jump");
                     jumpDirection *= 0.25f; // Walk jump
                 }
             }
@@ -271,7 +262,6 @@ namespace Tartarus
             if (playerManager.isSprinting)
             {
                 playerManager.currentStamina -= sprintStaminaCost * Time.deltaTime;
-               PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(playerManager.currentStamina);
             }
 
         }

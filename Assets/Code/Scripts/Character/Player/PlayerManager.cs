@@ -49,6 +49,9 @@ namespace Tartarus
             playerLocomotionManager.HandleAllMovement();
             // Regen stamina
             playerStatsManager.RegenerateStamina();
+            // Update stamina
+            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina);
+            
         }
 
         protected override void LateUpdate()

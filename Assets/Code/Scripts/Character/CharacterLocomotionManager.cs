@@ -10,12 +10,12 @@ namespace Tartarus
         CharacterManager characterManager;
 
         [Header("Ground check && Jumping")]
-        [SerializeField] protected float gravityForce = -9.8f;
+        [SerializeField] protected float gravityForce = -40;
         [SerializeField] LayerMask groundLayer;
         [SerializeField] float groundCheckSphereRadius = 0.3f;
         [SerializeField] protected Vector3 yVelocity; // gravity
-        [SerializeField] protected float groundedYVelocity = -40f;
-        [SerializeField] protected float fallStartYVelocity = -2f; // velocity gain per frame when falling
+        [SerializeField] protected float groundedYVelocity = -40;
+        [SerializeField] protected float fallStartYVelocity = -5; // velocity gain per frame when falling
         protected bool fallingVelocityHasBeenSet = false;
         protected float inAirTimer = 0;
         protected virtual void Awake()
@@ -51,6 +51,8 @@ namespace Tartarus
                 yVelocity.y += gravityForce * Time.deltaTime;
 
             }
+
+            yVelocity.y = Mathf.Clamp(yVelocity.y, -40, 40);
 
             characterManager.characterController.Move(yVelocity * Time.deltaTime);
 
