@@ -15,7 +15,6 @@ namespace Tartarus
         public float currentHealth;
         public int endurance;
         public float currentStamina;
-        public bool consumesStamina = false;
 
         [Header("Flags")]
         public bool isInteracting = false;
