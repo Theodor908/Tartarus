@@ -9,15 +9,39 @@ namespace Tartarus
 
         CharacterManager characterManager;
 
-        [Header("Ground check && Jumping")]
-        [SerializeField] protected float gravityForce = -40;
+        [Header("Movement Settings")]
+        [HideInInspector] protected Vector3 moveDirection;
+        [SerializeField] protected float walkingSpeed = 2;
+        [SerializeField] protected float runningSpeed = 5;
+        [SerializeField] protected float sprintingSpeed = 7;
+        [SerializeField] protected float rotationSpeed = 15;
+        [SerializeField] protected float sprintStaminaCost = 2;
+
+        [Header("Dodge Settings")]
+        protected Vector3 rollDirection;
+        [SerializeField] protected float dodgeStaminaCost = 25;
+
+        [Header("Jump Settings")]
+        [SerializeField] protected Vector3 jumpDirection;
+        [SerializeField] protected float jumpStaminaCost = 25;
+        [SerializeField] protected float jumpHeight = 2f;
+        [SerializeField] protected float jumpForwardSpeed = 3f;
+        [SerializeField] protected float freeFallSpeed = 5;
+
+        [Header("Ground check")]
         [SerializeField] LayerMask groundLayer;
-        [SerializeField] float groundCheckSphereRadius = 0.3f;
-        [SerializeField] protected Vector3 yVelocity; // gravity
-        [SerializeField] protected float groundedYVelocity = -40;
-        [SerializeField] protected float fallStartYVelocity = -5; // velocity gain per frame when falling
+        [SerializeField] float groundCheckSphereRadius = 0.2f;
+        [SerializeField] protected float skipGroundCheckTimer = 0.2f;
+        [SerializeField] protected float skipGroundCheckTimerCounter = 0;
+
+        [Header("Gravity Settings")]
+        [SerializeField] protected float gravityForce = -20f;
+        [SerializeField] protected Vector3 yVelocity;
+        [SerializeField] protected float groundedYVelocity = -20f;
+        [SerializeField] protected float fallStartYVelocity = 0;
         protected bool fallingVelocityHasBeenSet = false;
         protected float inAirTimer = 0;
+
         protected virtual void Awake()
         {
             characterManager = GetComponent<CharacterManager>();
@@ -25,12 +49,13 @@ namespace Tartarus
 
         protected virtual void Update()
         {
+
             HandleGroundCheck();
 
             if(characterManager.isGrounded)
             {
-                // characterManager.isJumping = false; for hard coded jump and also make radius of sphere smaller/ use raycast
-                if(yVelocity.y < 0)
+
+                if(yVelocity.y < -jumpHeight)
                 {
                     inAirTimer = 0;
                     fallingVelocityHasBeenSet = false;
@@ -59,8 +84,20 @@ namespace Tartarus
         }
 
         protected void HandleGroundCheck()
-        {
+        { 
+            if(skipGroundCheckTimerCounter > 0)
+            {
+                characterManager.isGrounded = false;
+                skipGroundCheckTimerCounter -= Time.deltaTime;
+                return;
+            }
+            characterManager.isJumping = false;
             characterManager.isGrounded = Physics.CheckSphere(characterManager.transform.position, groundCheckSphereRadius, groundLayer);
+        }
+
+        protected void CalculateTimeToLand()
+        {
+            skipGroundCheckTimerCounter = 2 * Mathf.Sqrt(-2 * jumpHeight / gravityForce);
         }
 
         protected void OnDrawGizmosSelected()

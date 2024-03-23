@@ -16,6 +16,7 @@ namespace Tartarus
 
         public virtual void ProcessInstantEffect(InstantCharacterEffect effect)
         { 
+            Debug.Log("Processing effect: " + effect.name);
             effect.ProcessEffect(characterManager);
         }
 

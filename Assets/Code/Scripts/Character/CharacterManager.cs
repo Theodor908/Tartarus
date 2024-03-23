@@ -6,14 +6,21 @@ namespace Tartarus
 {
     public class CharacterManager : MonoBehaviour
     {
+        [Header ("Status of character")]
+        public bool isDead = false;
+        public bool isInvulnerable = false;
 
         [HideInInspector] public CharacterController characterController;
+        [HideInInspector] public CharacterEffectsManager characterEffectsManager;
         [HideInInspector] public Animator animator;
+        public string characterName = "";
 
         [Header("Stats")]
-        public int vitality;
+        public float maxHealth = 100;
+        public int vitality = 1;
         public float currentHealth;
-        public int endurance;
+        public float maxStamina = 100;
+        public int endurance = 1;
         public float currentStamina;
 
         [Header("Flags")]
@@ -28,6 +35,7 @@ namespace Tartarus
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            characterEffectsManager = GetComponent<CharacterEffectsManager>();
             animator = GetComponent<Animator>();
         }
 

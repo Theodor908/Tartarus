@@ -7,30 +7,11 @@ namespace Tartarus
     public class PlayerLocomotionManager : CharacterLocomotionManager
     {
 
-        PlayerManager playerManager; 
-                
+        PlayerManager playerManager;
+
         [HideInInspector] public float horizontalMovement;
         [HideInInspector] float verticalMovement;
         [HideInInspector] float moveAmount;
-
-        [Header ("Movement Settings")]
-        private Vector3 moveDirection;
-        [SerializeField] float walkingSpeed = 2;
-        [SerializeField] float runningSpeed = 5;
-        [SerializeField] float sprintingSpeed = 7;
-        [SerializeField] float rotationSpeed = 15;
-        [SerializeField] float sprintStaminaCost = 2;
-
-        [Header ("Dodge Settings")]
-        private Vector3 rollDirection;
-        [SerializeField] float dodgeStaminaCost = 5;
-
-        [Header ("Jump Settings")]
-        [SerializeField] float jumpStaminaCost = 2;
-        [SerializeField] float jumpHeight = 1.25f;
-        private Vector3 jumpDirection;
-        [SerializeField] float jumpForwardSpeed = 3f;
-        [SerializeField] float freeFallSpeed = 5;
 
         protected override void Awake()
         {
@@ -65,6 +46,7 @@ namespace Tartarus
             //Camera perspective movement
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
             moveDirection += PlayerCamera.instance.transform.right * horizontalMovement;
+
             moveDirection.y = 0;
             moveDirection.Normalize();
 
@@ -95,15 +77,14 @@ namespace Tartarus
 
         public void HandleFreeFallMovement()
         {
-
-            if(!playerManager.isGrounded)
+            if(playerManager.isGrounded || playerManager.isJumping)
             {
-                Vector3 freeFallDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-                freeFallDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
-
-                playerManager.characterController.Move(freeFallDirection * Time.deltaTime * freeFallSpeed);
-
+                return;
             }
+            Vector3 freeFallDirection = PlayerCamera.instance.transform.forward * verticalMovement;
+            freeFallDirection += PlayerCamera.instance.transform.right * horizontalMovement;
+
+            playerManager.characterController.Move(freeFallDirection * Time.deltaTime * freeFallSpeed);
 
         }
 
@@ -146,7 +127,7 @@ namespace Tartarus
                 return;
             }
 
-            if (playerManager.currentStamina < dodgeStaminaCost * Time.deltaTime)
+            if (playerManager.currentStamina < dodgeStaminaCost)
             {
                 return;
             }
@@ -202,20 +183,20 @@ namespace Tartarus
             }
 
             // Stamina cost
+
             playerManager.currentStamina -= jumpStaminaCost;
 
-            playerManager.playerAnimationManager.PlayTargetAnimation("Jump_Start", false);
+            playerManager.playerAnimationManager.PlayTargetAnimation("Jump_Start", false, false);
 
             playerManager.isJumping = true;
 
-            // Hard coded jump
-            //ApplyJumpVelocity();
+            CalculateTimeToLand();
 
-            jumpDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-            jumpDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+            jumpDirection = PlayerCamera.instance.transform.forward * verticalMovement;
+            jumpDirection += PlayerCamera.instance.transform.right * horizontalMovement;
 
-            // Handle movement during jump
-            if(jumpDirection != Vector3.zero)
+            // Handle movement during jump by the type of movement
+           if(jumpDirection != Vector3.zero)
             {
                 if (playerManager.isSprinting)
                 {
@@ -223,13 +204,15 @@ namespace Tartarus
                 }
                 else if (moveAmount >= 1)
                 {
-                    jumpDirection *= 0.75f; // Run jump
+                    jumpDirection *= 0.50f; // Run jump
                 }
                 else if (moveAmount < 1)
                 {
                     jumpDirection *= 0.25f; // Walk jump
                 }
-            }
+           }
+
+            ApplyJumpVelocity();
 
         }
 
