@@ -11,8 +11,9 @@ namespace Tartarus
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimationManager playerAnimationManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
-
-        public string characterName = "";
+        [Header ("Debug for level up")]
+        public bool levelUp = false;
+        public int levelUpPoints = 0;
 
         protected override void Awake()
         {
@@ -37,19 +38,33 @@ namespace Tartarus
         protected override void Start()
         {
             base.Start();
+            PlayerUIManager.instance.playerUIHudManager.setMaxHealthValue(maxHealth);
+            PlayerUIManager.instance.playerUIHudManager.setMaxStaminaValue(maxStamina);
 
-            currentStamina = PlayerStatsManager.instance.CalculateStaminaBasedOnEnduranceLevel(endurance);
-            PlayerUIManager.instance.playerUIHudManager.setMaxStaminaValue(currentStamina);
+            currentHealth = maxHealth;
+            currentStamina = maxStamina;
+
+            PlayerStatsManager.instance.ResetStaminaRegenTimer();
+
         }
 
         protected override void Update()
         {
             base.Update();
+
+            //Debug for level up
+            if(levelUp)
+            {
+                playerStatsManager.LevelUpVitality(levelUpPoints);
+                playerStatsManager.LevelUpEndurance(levelUpPoints);
+                levelUp = false;
+                levelUpPoints = 0;
+            }
+
             //Handle movement
             playerLocomotionManager.HandleAllMovement();
-            // Regen stamina
-            playerStatsManager.RegenerateStamina();
-            // Update stamina
+            // Update resources
+            PlayerUIManager.instance.playerUIHudManager.setNewHealthValue(currentHealth);
             PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina);
             
         }
@@ -67,11 +82,25 @@ namespace Tartarus
             currentCharacterData.xPosition = transform.position.x;
             currentCharacterData.yPosition = transform.position.y;
             currentCharacterData.zPosition = transform.position.z;
+
+            currentCharacterData.vitality = vitality;
+            currentCharacterData.endurance = endurance;
+
+            currentCharacterData.currentHealth = currentHealth;
+            currentCharacterData.currentStamina = currentStamina;
+
+
         }
         public void LoadGameFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
         {
             characterName = currentCharacterData.characterName;
             transform.position = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
+
+            vitality = currentCharacterData.vitality;
+            endurance = currentCharacterData.endurance;
+
+            currentHealth = currentCharacterData.currentHealth;
+            currentStamina = currentCharacterData.currentStamina;
         }
 
     }

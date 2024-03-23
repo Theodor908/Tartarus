@@ -24,4 +24,8 @@ public class PlayerUIManager : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        
+    }
 }

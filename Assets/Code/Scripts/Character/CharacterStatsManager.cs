@@ -20,11 +20,32 @@ namespace Tartarus
             characterManager = GetComponent<CharacterManager>();
         }
 
-        public int CalculateStaminaBasedOnEnduranceLevel(int endurance)
+        protected virtual void Start()
+        {
+            characterManager.maxHealth = CalculateHealthBasedOnVitalityLevel(characterManager.vitality);
+            characterManager.maxStamina = CalculateStaminaBasedOnEnduranceLevel(characterManager.endurance);
+        }
+
+        protected virtual void Update()
+        {
+            RegenerateStamina();
+        }
+
+        protected virtual int CalculateHealthBasedOnVitalityLevel(int vitality)
+        {
+
+            float health = 100;
+            health += (vitality - 1) * 10;
+
+            return Mathf.RoundToInt(health);
+
+        }
+
+        protected virtual int CalculateStaminaBasedOnEnduranceLevel(int endurance)
         {
 
             float stamina = 100;
-            stamina += endurance * 10;
+            stamina += (endurance - 1) * 10;
 
             return Mathf.RoundToInt(stamina);
 
@@ -42,7 +63,7 @@ namespace Tartarus
 
             if (staminaRegenTimer > staminaRegenDelay)
             {
-                if (characterManager.currentStamina < PlayerStatsManager.instance.CalculateStaminaBasedOnEnduranceLevel(characterManager.endurance))
+                if (characterManager.currentStamina < characterManager.maxStamina)
                 {
                     staminaTickTimer += Time.deltaTime;
                     if (staminaTickTimer > 0.1f)

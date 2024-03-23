@@ -24,5 +24,13 @@ namespace Tartarus
         public float yPosition;
         public float zPosition;
 
+        [Header("Resources")]
+        public float currentHealth = 100;
+        public float currentStamina = 100;
+
+        [Header("Character Stats")]
+        public int vitality = 1;
+        public int endurance = 1;
+
     }
 }
