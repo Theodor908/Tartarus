@@ -12,6 +12,7 @@ namespace Tartarus
 
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
+        [HideInInspector] public CharacterAnimationManager characterAnimationManager;
         [HideInInspector] public Animator animator;
         public string characterName = "";
 
@@ -36,6 +37,7 @@ namespace Tartarus
         {
             characterController = GetComponent<CharacterController>();
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
+            characterAnimationManager = GetComponent<CharacterAnimationManager>();
             animator = GetComponent<Animator>();
         }
 
@@ -53,5 +55,57 @@ namespace Tartarus
         {
 
         }
+
+        public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
+        {
+            currentHealth = -1;
+            isDead = true;
+
+            Debug.Log(currentHealth + " " + isDead);
+
+            // Reset all flags
+
+            // if in air death air anim
+
+            // if on ground death ground anim
+
+            if(!manuallySelectDeathAnimation)
+            {
+                characterAnimationManager.PlayTargetAnimation("Dead_01", true);
+            }
+            else
+            {
+                // Play default death animation
+            }
+
+            // Random death animation
+
+            yield return new WaitForSeconds(5);
+
+            // Award players with runes
+
+            // Disable character
+
+        }
+
+        public void CheckHealthPoints()
+        {
+            if(currentHealth == 0)
+            {
+                StartCoroutine(ProcessDeathEvent());
+            }
+
+            if(currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+
+        }
+
+        public virtual void ReviveCharacter()
+        {
+
+        }
+
     }
 }

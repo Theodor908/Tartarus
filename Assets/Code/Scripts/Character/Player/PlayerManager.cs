@@ -8,6 +8,10 @@ namespace Tartarus
 {
     public class PlayerManager : CharacterManager
     {
+
+        [Header ("Debug Menu")]
+        [SerializeField] bool respawnPlayer = false;
+
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimationManager playerAnimationManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
@@ -67,12 +71,34 @@ namespace Tartarus
             PlayerUIManager.instance.playerUIHudManager.setNewHealthValue(currentHealth);
             PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina);
             
+            CheckHealthPoints();
+            DebugMenu();
+
         }
 
         protected override void LateUpdate()
         {
             base.LateUpdate();
             PlayerCamera.instance.HandleAllCameraActions();
+        }
+
+        public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
+        {
+            PlayerUIManager.instance.playerUIPopUpManager.ShowYouDiedPopUp();
+            return base.ProcessDeathEvent(manuallySelectDeathAnimation);
+        }
+
+        public override void ReviveCharacter()
+        {
+            base.ReviveCharacter();
+            
+            currentHealth = maxHealth;
+            currentStamina = maxStamina;
+
+            //Rebirth effects
+
+            playerAnimationManager.PlayTargetAnimation("Empty", false);
+
         }
 
         public void SaveGameToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -101,6 +127,17 @@ namespace Tartarus
 
             currentHealth = currentCharacterData.currentHealth;
             currentStamina = currentCharacterData.currentStamina;
+        }
+
+        //Debug
+
+        private void DebugMenu()
+        {
+            if(respawnPlayer)
+            {
+                respawnPlayer = false;
+                ReviveCharacter();
+            }
         }
 
     }
