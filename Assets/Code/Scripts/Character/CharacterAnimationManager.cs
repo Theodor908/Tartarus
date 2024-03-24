@@ -21,7 +21,6 @@ namespace Tartarus
 
         public virtual void PlayTargetAnimation(string targetAnimation, bool isInteracting, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
-            Debug.Log(targetAnimation);
             characterManager.applyRootMotion = applyRootMotion;
             characterManager.animator.applyRootMotion = applyRootMotion;
             characterManager.animator.CrossFade(targetAnimation, 0.2f);
