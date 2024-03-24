@@ -58,10 +58,8 @@ namespace Tartarus
 
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
         {
-            currentHealth = -1;
+            currentHealth = 1;
             isDead = true;
-
-            Debug.Log(currentHealth + " " + isDead);
 
             // Reset all flags
 
@@ -90,7 +88,7 @@ namespace Tartarus
 
         public void CheckHealthPoints()
         {
-            if(currentHealth == 0)
+            if(currentHealth <= 0)
             {
                 StartCoroutine(ProcessDeathEvent());
             }

@@ -6,6 +6,9 @@ namespace Tartarus
 {
     public class DamageCollider : MonoBehaviour
     {
+        [Header("Colliders")]
+        protected Collider damageCollider;
+
         [Header ("Damage")]
         public float physicalDamage = 0; // Standard, strike, slash, pierce
         public float magicalDamage = 0;
@@ -58,6 +61,17 @@ namespace Tartarus
 
             damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
         }   
+
+        public virtual void EnableDamageCollider()
+        {
+            damageCollider.enabled = true;
+        }
+
+        public virtual void DisableDamageCollider()
+        {
+            damageCollider.enabled = false;
+            charactersDamaged.Clear();
+        }
 
     }
 }

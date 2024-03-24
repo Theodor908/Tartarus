@@ -10,14 +10,22 @@ namespace Tartarus
     {
 
         [Header ("Debug Menu")]
+        [SerializeField] bool levelUp = false;
+        [SerializeField] int levelUpPoints = 0;
         [SerializeField] bool respawnPlayer = false;
+        [SerializeField] bool switchRightHandWeapon = false;
 
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerAnimationManager playerAnimationManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
-        [Header ("Debug for level up")]
-        public bool levelUp = false;
-        public int levelUpPoints = 0;
+        [HideInInspector] public PlayerInventoryManager playerInventoryManager;
+        [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+
+        [Header("Weapon slots")]
+        public int previousRightHandWeaponID = -1;
+        public int previousLeftHandWeaponID = -1;
+        public int currentRightHandWeaponID = 0;
+        public int currentLeftHandWeaponID = 0;
 
         protected override void Awake()
         {
@@ -35,7 +43,9 @@ namespace Tartarus
 
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimationManager = GetComponent<PlayerAnimationManager>();
+            playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerStatsManager = GetComponent<PlayerStatsManager>();
+            playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
 
         }
 
@@ -56,22 +66,17 @@ namespace Tartarus
         {
             base.Update();
 
-            //Debug for level up
-            if(levelUp)
-            {
-                playerStatsManager.LevelUpVitality(levelUpPoints);
-                playerStatsManager.LevelUpEndurance(levelUpPoints);
-                levelUp = false;
-                levelUpPoints = 0;
-            }
-
             //Handle movement
             playerLocomotionManager.HandleAllMovement();
+            //Handle weapon change
+            HandleWeaponChange(previousRightHandWeaponID, currentRightHandWeaponID, previousLeftHandWeaponID, currentLeftHandWeaponID);
             // Update resources
             PlayerUIManager.instance.playerUIHudManager.setNewHealthValue(currentHealth);
             PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina);
             
-            CheckHealthPoints();
+            CheckHealthPoints();   
+
+            //Debug
             DebugMenu();
 
         }
@@ -99,6 +104,37 @@ namespace Tartarus
 
             playerAnimationManager.PlayTargetAnimation("Empty", false);
 
+        }
+
+        public void HandleWeaponChange(int previousRightID, int currentRightID, int previousLeftID, int currentLeftID)
+        {
+            if (previousRightID != currentRightID)
+            {
+                Debug.Log("Right weapon change");
+                OnCurrentRightHandWeaponIDChange(currentRightID);
+                previousRightHandWeaponID = currentRightHandWeaponID;
+            }
+
+            if(previousLeftID != currentLeftID)
+            {
+                OnCurrentLeftHandWeaponIDChange(currentLeftID);
+                previousLeftHandWeaponID = currentLeftHandWeaponID;
+            }
+        }
+
+        public void OnCurrentRightHandWeaponIDChange(int newID)
+        {
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponItem(newID));
+            playerInventoryManager.currentRightHandWeaponItem = newWeapon;
+            playerEquipmentManager.LoadWeaponOnRightHand();
+            Debug.Log("Loaded player manager new weapon " + newWeapon.itemName + " with ID " + newWeapon.itemID);
+        }
+
+        public void OnCurrentLeftHandWeaponIDChange(int newID)
+        {
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponItem(newID));
+            playerInventoryManager.currentLeftHandWeaponItem = newWeapon;
+            playerEquipmentManager.LoadWeaponOnLeftHand();
         }
 
         public void SaveGameToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -133,11 +169,26 @@ namespace Tartarus
 
         private void DebugMenu()
         {
-            if(respawnPlayer)
+            if (levelUp)
+            {
+                playerStatsManager.LevelUpVitality(levelUpPoints);
+                playerStatsManager.LevelUpEndurance(levelUpPoints);
+                levelUp = false;
+                levelUpPoints = 0;
+            }
+
+            if (respawnPlayer)
             {
                 respawnPlayer = false;
                 ReviveCharacter();
             }
+
+            if(switchRightHandWeapon)
+            {
+                switchRightHandWeapon = false;
+                playerEquipmentManager.SwitchRightWeapon();
+            }
+
         }
 
     }

@@ -102,7 +102,6 @@ namespace Tartarus
 
             if (Physics.SphereCast(cameraPivotTransform.position, cameraCollisionRadius, direction, out hit, Mathf.Abs(targetCameraZPosition), collisionLayers))
             {
-                Debug.Log("Camera hit something");
                 float distanceFromObject = Vector3.Distance(cameraPivotTransform.position, hit.point);
                 targetCameraZPosition = -(distanceFromObject - cameraCollisionRadius);
             }

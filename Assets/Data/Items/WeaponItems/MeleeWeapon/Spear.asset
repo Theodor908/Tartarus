@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c945dafc301d1fb48b51a7e033258eb5, type: 3}
+  m_Name: Spear
+  m_EditorClassIdentifier: 
+  itemName: 
+  itemDescription: 'Nemesis''s justice sword. A powerful relic used to judge the
+    fatum of  so many and also to seek revenge.
+
+'
+  itemIcon: {fileID: 0}
+  itemID: 0
+  weaponModel: {fileID: 102754, guid: ff775334133bc3f4296a97ab5d799bb4, type: 3}
+  strengthRequirement: 10
+  dexterityRequirement: 10
+  physicalDamage: 56
+  poiseDamage: 10
+  baseStaminaCost: 20
