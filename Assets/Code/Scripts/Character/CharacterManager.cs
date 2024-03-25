@@ -43,7 +43,7 @@ namespace Tartarus
 
         protected virtual void Start()
         {
-
+            IgnoreMyOwnColliders();
         }
 
         protected virtual void Update()
@@ -102,6 +102,30 @@ namespace Tartarus
 
         public virtual void ReviveCharacter()
         {
+
+        }
+
+        public virtual void IgnoreMyOwnColliders()
+        {
+            // Take every colliders on the character and ignore them
+            Collider characterControllerCollider = GetComponent<Collider>();
+            Collider[] damageableCharacterColliders = GetComponentsInChildren<Collider>();
+            List<Collider> ignoreColliders = new List<Collider>();
+
+            foreach (var collider in damageableCharacterColliders)
+            {
+                ignoreColliders.Add(collider);
+            }
+
+            ignoreColliders.Add(characterControllerCollider);
+
+            foreach(var collider in ignoreColliders)
+            {
+                foreach(var otherCollider in ignoreColliders)
+                {
+                    Physics.IgnoreCollision(collider, otherCollider, true);
+                }
+            }
 
         }
 

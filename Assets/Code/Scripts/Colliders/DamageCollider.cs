@@ -22,7 +22,8 @@ namespace Tartarus
 
         private void OnTriggerEnter(Collider other)
         {
-            CharacterManager damageTarget = other.GetComponent<CharacterManager>();
+
+            CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();
 
             if(damageTarget != null)
             {
@@ -35,6 +36,8 @@ namespace Tartarus
                 // BLocking
 
                 // Damage the target
+
+                Debug.Log(other);
 
                 DamageTarget(damageTarget);
 
