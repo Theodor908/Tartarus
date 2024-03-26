@@ -28,6 +28,12 @@ namespace Tartarus
         private float cameraZPosition; //Value for camera collision
         private float targetCameraZPosition; // Value for camera collision
 
+        [Header ("Lock On")]
+        [SerializeField] private float lockOnRadius = 25;
+        [SerializeField] private float minimumViewableAngle = -50;
+        [SerializeField] private float maximumViewableAngle = 50;
+        [SerializeField] private float maximumLockOnDistance = 25;
+
 
         private void Awake()
         {
@@ -116,6 +122,61 @@ namespace Tartarus
 
             cameraObjectPosition.z = Mathf.Lerp(cameraObject.transform.localPosition.z, targetCameraZPosition, Time.deltaTime * 2.5f);
             cameraObject.transform.localPosition = cameraObjectPosition;
+
+        }
+
+        public void HandleLocatingLockOnTargets()
+        {
+            float shortDistance = Mathf.Infinity; // Shortest distance to a target
+            float shortDistanceOfRightTarget = Mathf.Infinity; // Shortest distance from the target to another on its right (used for already lock on feature)
+            float shortDistanceOfLeftTarget = -Mathf.Infinity; // Shortest distance from the target to another on its left (used for already lock on feature)
+
+            Collider[] colliders = Physics.OverlapSphere(playerManager.transform.position, lockOnRadius, WorldUtilityManager.instance.GetCharacterLayers()); // Find all colliders within a radius of 25
+
+            for(int i = 0; i < colliders.Length; i++)
+            {
+                CharacterManager lockOnTarget = colliders[i].transform.GetComponent<CharacterManager>();
+
+                if(lockOnTarget != null)
+                {
+
+                    if (lockOnTarget.transform.root == playerManager.transform.root)
+                        continue;
+
+                    if (lockOnTarget.isDead)
+                        continue;
+
+                    // Check if in fov
+                    Vector3 lockOnTargetDirection = lockOnTarget.transform.position - playerManager.transform.position;
+                    float distanceFromTarget = Vector3.Distance(playerManager.transform.position, lockOnTarget.transform.position);
+                    float viewableAngle = Vector3.Angle(lockOnTargetDirection, cameraObject.transform.forward);
+
+                    if (distanceFromTarget > maximumLockOnDistance)
+                        continue;
+
+                    Debug.Log("Distance from target: " + distanceFromTarget + " Viewable angle: " + viewableAngle + " Minimum viewable angle: " + minimumViewableAngle + " Maximum viewable angle: " + maximumViewableAngle);
+
+                    if (viewableAngle > minimumViewableAngle && viewableAngle < maximumViewableAngle)
+                    {
+                        RaycastHit hit;
+
+                        Debug.Log("Only Linecast to pass");
+
+                        if(Physics.Linecast(playerManager.playerCombatManager.lockOnTransform.position, lockOnTarget.characterCombatManager.lockOnTransform.position, out hit, WorldUtilityManager.instance.GetEnviromentalLayers()))
+                        {
+                            //Something is blocking the view
+                            continue;
+                        }
+                        else
+                        {
+                            //Debug.Log(hit.collider.gameObject.name);
+                            Debug.Log("We made it");
+                        }
+                    }
+
+                }
+
+            }
 
         }
 

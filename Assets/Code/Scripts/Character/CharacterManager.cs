@@ -33,6 +33,7 @@ namespace Tartarus
         public bool applyRootMotion = false;
         public bool canRotate = true;
         public bool canMove = true;
+        public bool isLockedOn = false;
 
         protected virtual void Awake()
         {

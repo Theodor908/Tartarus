@@ -30,6 +30,9 @@ namespace Tartarus
         public float cameraVerticalInput;
         public float cameraHorizontalInput;
 
+        [Header ("Lock On Input")]
+        [SerializeField] bool lockOnInput = false;
+
 
         public static PlayerInputManager Instance { get => instance; }
 
@@ -66,6 +69,9 @@ namespace Tartarus
                 // RMB
                 playerControls.PlayerActions.RMB.performed += ctx => RMB_Input = true;
 
+                // Lock on
+                playerControls.PlayerActions.Lockon.performed += ctx => lockOnInput = true;
+
                 // Sprint
                 playerControls.PlayerActions.Sprint.performed += ctx => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += ctx => sprintInput = false;
@@ -81,8 +87,51 @@ namespace Tartarus
             HandleJumpInput();
             HandleDodgeInput();
             HandleSprintInput();
+            HandleLockOnInput();
             HandleMovementInput();
             HandleCameraMovementInput();
+
+        }
+
+        private void HandleLockOnInput()
+        {
+            // if using a bow return
+
+            // Dead targets
+            if(playerManager.isLockedOn)
+            {
+                if(playerManager.playerCombatManager.currentTarget == null)
+                {
+                    return;
+                }
+
+                if (playerManager.playerCombatManager.currentTarget.isDead)
+                {
+                    playerManager.isLockedOn = false;
+                }
+
+                // Find new target or unlock
+
+
+            }
+
+            if(lockOnInput && playerManager.isLockedOn)
+            {
+                lockOnInput = false;
+                // Disable lock on
+
+                return;
+            }
+
+            if (lockOnInput && !playerManager.isLockedOn)
+            {
+                lockOnInput = false;
+                Debug.Log("Attempting to lock on");
+                PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                return;
+            }
+
 
         }
 

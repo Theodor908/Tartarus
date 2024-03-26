@@ -143,6 +143,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lock on"",
+                    ""type"": ""Button"",
+                    ""id"": ""5e655a75-39d4-4d59-bae1-a237c1e07448"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -198,6 +207,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RMB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4d5d1460-3948-4fe3-9901-6d30688f21a0"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lock on"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -272,6 +292,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_RMB = m_PlayerActions.FindAction("RMB", throwIfNotFound: true);
         m_PlayerActions_Walk = m_PlayerActions.FindAction("Walk", throwIfNotFound: true);
         m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
+        m_PlayerActions_Lockon = m_PlayerActions.FindAction("Lock on", throwIfNotFound: true);
         // Camera Movement
         m_CameraMovement = asset.FindActionMap("Camera Movement", throwIfNotFound: true);
         m_CameraMovement_Movement = m_CameraMovement.FindAction("Movement", throwIfNotFound: true);
@@ -390,6 +411,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_RMB;
     private readonly InputAction m_PlayerActions_Walk;
     private readonly InputAction m_PlayerActions_Sprint;
+    private readonly InputAction m_PlayerActions_Lockon;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
@@ -399,6 +421,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @RMB => m_Wrapper.m_PlayerActions_RMB;
         public InputAction @Walk => m_Wrapper.m_PlayerActions_Walk;
         public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
+        public InputAction @Lockon => m_Wrapper.m_PlayerActions_Lockon;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -423,6 +446,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @Lockon.started += instance.OnLockon;
+            @Lockon.performed += instance.OnLockon;
+            @Lockon.canceled += instance.OnLockon;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -442,6 +468,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @Lockon.started -= instance.OnLockon;
+            @Lockon.performed -= instance.OnLockon;
+            @Lockon.canceled -= instance.OnLockon;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -562,6 +591,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnRMB(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnLockon(InputAction.CallbackContext context);
     }
     public interface ICameraMovementActions
     {

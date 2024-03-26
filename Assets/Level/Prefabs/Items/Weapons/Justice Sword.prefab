@@ -130,8 +130,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.00893932, y: 1.0910726, z: 0.04168115}
-  m_Center: {x: 0.0007743146, y: 0.6765561, z: 0.0014308896}
+  m_Size: {x: 0.013472233, y: 1.1240383, z: 0.059438568}
+  m_Center: {x: -0.0014932464, y: 0.6639171, z: -0.0004062745}
 --- !u!114 &5351507754131766481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +148,7 @@ MonoBehaviour:
   magicalDamage: 0
   fireDamage: 0
   characterCausingDamage: {fileID: 0}
+  light_Attack_01_Modifier: 0
 --- !u!1 &7143477742704024094
 GameObject:
   m_ObjectHideFlags: 0
