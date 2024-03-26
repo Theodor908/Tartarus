@@ -118,7 +118,8 @@ namespace Tartarus
             if(lockOnInput && playerManager.isLockedOn)
             {
                 lockOnInput = false;
-                // Disable lock on
+                PlayerCamera.instance.ClearLockOnTargets();
+                playerManager.isLockedOn = false;
 
                 return;
             }
@@ -128,6 +129,12 @@ namespace Tartarus
                 lockOnInput = false;
                 Debug.Log("Attempting to lock on");
                 PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                if(PlayerCamera.instance.nearestLockOnTarget != null)
+                {
+                    playerManager.characterCombatManager.SetLockOnTarget(PlayerCamera.instance.nearestLockOnTarget);
+                    playerManager.isLockedOn = true;
+                }
 
                 return;
             }

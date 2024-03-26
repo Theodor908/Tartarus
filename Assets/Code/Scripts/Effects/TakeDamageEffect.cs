@@ -88,6 +88,11 @@ namespace Tartarus
         private void PlayDirectionalBasedDamageAnimation(CharacterManager characterManager)
         {
 
+            if(characterManager.isDead)
+            {
+                return;
+            }
+
             poiseIsBroken = true;
 
             if (angleOfDamage >= 145 && angleOfDamage <= 180)

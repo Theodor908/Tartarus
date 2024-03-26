@@ -53,6 +53,8 @@ namespace Tartarus
         {
             animator.SetBool("isGrounded", isGrounded);
             CheckHealthPoints();
+            ResetLockOn();
+
         }
 
         protected virtual void LateUpdate()
@@ -94,7 +96,6 @@ namespace Tartarus
         {
             if(currentHealth <= 0 && !isDead)
             {
-                animator.SetBool("isDead", true);
                 StartCoroutine(ProcessDeathEvent());
             }
 
@@ -132,6 +133,12 @@ namespace Tartarus
                 }
             }
 
+        }
+
+       public virtual void ResetLockOn()
+        {
+            if (!isLockedOn)
+                characterCombatManager.currentTarget = null;
         }
 
     }

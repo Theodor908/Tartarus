@@ -109,9 +109,10 @@ namespace Tartarus
 
             isDead = false;
 
+            playerAnimationManager.PlayTargetAnimation("Empty", false);
+
             //Rebirth effects
             Debug.Log("Reviving player");
-            animator.SetBool("isDead", false);
 
         }
         #endregion
