@@ -22,6 +22,7 @@ namespace Tartarus
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool jumpInput = false;
         [SerializeField] bool sprintInput = false;
+        [SerializeField] bool RMB_Input = false;
         
 
         [Header("Camera Move Input")]
@@ -61,6 +62,10 @@ namespace Tartarus
                 playerControls.PlayerActions.Dodge.performed += ctx => dodgeInput = true;
                 // Jump
                 playerControls.PlayerActions.Jump.performed += ctx => jumpInput = true;
+
+                // RMB
+                playerControls.PlayerActions.RMB.performed += ctx => RMB_Input = true;
+
                 // Sprint
                 playerControls.PlayerActions.Sprint.performed += ctx => sprintInput = true;
                 playerControls.PlayerActions.Sprint.canceled += ctx => sprintInput = false;
@@ -72,11 +77,13 @@ namespace Tartarus
 
         private void Update()
         {
+            HandleRMBInput();
             HandleJumpInput();
             HandleDodgeInput();
             HandleSprintInput();
             HandleMovementInput();
             HandleCameraMovementInput();
+
         }
 
         #region MovementInput
@@ -142,6 +149,21 @@ namespace Tartarus
             {
                 jumpInput = false;
                 playerManager.playerLocomotionManager.AttemptToPerformJump();
+            }
+        }
+
+        public void HandleRMBInput()
+        {
+            if (RMB_Input)
+            {
+                RMB_Input = false;
+                // If ui is opne return
+                playerManager.SetCharacterActionHand(true);
+
+                // Maybe some two handed weapon logic ?
+
+                playerManager.playerCombatManager.PerformWeaponBasedAction(playerManager.playerInventoryManager.currentRightHandWeaponItem.oh_RMB_Action, playerManager.playerInventoryManager.currentRightHandWeaponItem);
+
             }
         }
 

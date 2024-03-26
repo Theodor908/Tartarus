@@ -515,6 +515,7 @@ MonoBehaviour:
   characterController: {fileID: 0}
   characterEffectsManager: {fileID: 0}
   characterAnimationManager: {fileID: 0}
+  characterCombatManager: {fileID: 0}
   animator: {fileID: 0}
   characterName: 
   maxHealth: 100
@@ -539,10 +540,14 @@ MonoBehaviour:
   playerStatsManager: {fileID: 0}
   playerInventoryManager: {fileID: 0}
   playerEquipmentManager: {fileID: 0}
+  playerCombatManager: {fileID: 0}
   previousRightHandWeaponID: -1
   previousLeftHandWeaponID: -1
   currentRightHandWeaponID: 0
   currentLeftHandWeaponID: 0
+  isUsingRightHand: 0
+  isUsingLeftHand: 0
+  currentWeaponBeingUsed: 0
 --- !u!114 &553948943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,9 +664,9 @@ MonoBehaviour:
   currentRightHandWeaponItem: {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
   currentLeftHandWeaponItem: {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
   weaponsInRightHandSlots:
-  - {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
-  - {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
   - {fileID: 11400000, guid: e1195e51e7637c249834bd10d1a1e002, type: 2}
+  - {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
+  - {fileID: 11400000, guid: 1a3ecf0333ba22a4a91d305edb7e9775, type: 2}
   rightHandSlotIndex: 0
   weaponsInLeftHandSlots:
   - {fileID: 11400000, guid: f02677534398548478f705f36d7f509d, type: 2}
@@ -711,6 +716,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &553948960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553948940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a3a2a82dd4fdc4187bb9477728378e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAttackType: 0
+  currentWeapon: {fileID: 0}
 --- !u!1 &618330742 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6472589064474706198, guid: 01b4aedfd2a5c1b489e54bbde61876d4, type: 3}
@@ -9110,6 +9129,9 @@ PrefabInstance:
       addedObject: {fileID: 553948942}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 01b4aedfd2a5c1b489e54bbde61876d4, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 553948960}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 01b4aedfd2a5c1b489e54bbde61876d4, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 553948946}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 01b4aedfd2a5c1b489e54bbde61876d4, type: 3}
       insertIndex: -1
@@ -9304,6 +9326,7 @@ MonoBehaviour:
   dodgeInput: 0
   jumpInput: 0
   sprintInput: 0
+  RMB_Input: 0
   cameraInput: {x: 0, y: 0}
   cameraVerticalInput: 0
   cameraHorizontalInput: 0
@@ -9378,6 +9401,71 @@ CapsuleCollider:
   m_Height: 0.29
   m_Direction: 0
   m_Center: {x: -0.03, y: -0.03, z: 0}
+--- !u!1001 &45177548817243497
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 533184257756078319, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_Name
+      value: WorldActionManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 555344459176625174, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: weaponItemActions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 555344459176625174, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: weaponItemActions.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9c2b0f8527a2c264486d36a921fe3e8a, type: 2}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.100289345
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2955902
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.140485
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052559651400958098, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 33a6ba728c9594b47b353a510735e71b, type: 3}
 --- !u!1001 &148157704652189250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9695,3 +9783,4 @@ SceneRoots:
   - {fileID: 148157704652189250}
   - {fileID: 368617546}
   - {fileID: 873505712164103541}
+  - {fileID: 45177548817243497}

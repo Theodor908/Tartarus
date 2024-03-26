@@ -22,13 +22,15 @@ namespace Tartarus
         [Header("Weapon poise")]
         public float poiseDamage = 10;
 
-        // Weapon modifiers
+        [Header ("Attack modifiers")]
+        public float light_Attack_01_Modifier = 1.1f;
         // Light attack
         // Heavy attack
         // Critical attack
 
-        [Header("Stamina cost")]
+        [Header("Stamina cost modifiers")]
         public int baseStaminaCost = 20;
+        public float lightAttackStaminaCostMultiplier = 0.9f;
         // Running attack stamina cost
         // Light attack stamina cost
         // Heavy attack stamina cost
@@ -36,7 +38,8 @@ namespace Tartarus
         // Weapon deflection (melee) - bounce off shields
 
         // Item based actions
-
+        [Header("Weapon actions")]
+        public WeaponItemAction oh_RMB_Action;
 
        
     }

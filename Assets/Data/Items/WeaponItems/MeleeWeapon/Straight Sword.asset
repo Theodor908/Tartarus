@@ -18,10 +18,11 @@ MonoBehaviour:
 
 '
   itemIcon: {fileID: 0}
-  itemID: 0
+  itemID: 1
   weaponModel: {fileID: 2622455937252648734, guid: 8bbccb8a9d3fa1b46a5a9f4110ad07d5, type: 3}
   strengthRequirement: 10
   dexterityRequirement: 10
   physicalDamage: 56
   poiseDamage: 10
   baseStaminaCost: 20
+  oh_RMB_Action: {fileID: 11400000, guid: 9c2b0f8527a2c264486d36a921fe3e8a, type: 2}
