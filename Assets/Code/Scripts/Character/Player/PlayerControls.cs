@@ -118,6 +118,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""RMB"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f2b325d-8e7a-4b0d-9e59-3c498b9e7629"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Walk"",
                     ""type"": ""PassThrough"",
                     ""id"": ""1eb4ce35-35d0-45dd-832d-d36679891ee0"",
@@ -178,6 +187,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9eb46e4c-edf9-47b9-9761-ad05cd50225c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RMB"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -249,6 +269,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerActions_RMB = m_PlayerActions.FindAction("RMB", throwIfNotFound: true);
         m_PlayerActions_Walk = m_PlayerActions.FindAction("Walk", throwIfNotFound: true);
         m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
         // Camera Movement
@@ -366,6 +387,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_Dodge;
     private readonly InputAction m_PlayerActions_Jump;
+    private readonly InputAction m_PlayerActions_RMB;
     private readonly InputAction m_PlayerActions_Walk;
     private readonly InputAction m_PlayerActions_Sprint;
     public struct PlayerActionsActions
@@ -374,6 +396,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
+        public InputAction @RMB => m_Wrapper.m_PlayerActions_RMB;
         public InputAction @Walk => m_Wrapper.m_PlayerActions_Walk;
         public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
@@ -391,6 +414,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @RMB.started += instance.OnRMB;
+            @RMB.performed += instance.OnRMB;
+            @RMB.canceled += instance.OnRMB;
             @Walk.started += instance.OnWalk;
             @Walk.performed += instance.OnWalk;
             @Walk.canceled += instance.OnWalk;
@@ -407,6 +433,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @RMB.started -= instance.OnRMB;
+            @RMB.performed -= instance.OnRMB;
+            @RMB.canceled -= instance.OnRMB;
             @Walk.started -= instance.OnWalk;
             @Walk.performed -= instance.OnWalk;
             @Walk.canceled -= instance.OnWalk;
@@ -530,6 +559,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnDodge(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnRMB(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
     }

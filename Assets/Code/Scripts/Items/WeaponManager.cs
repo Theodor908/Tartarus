@@ -6,7 +6,7 @@ namespace Tartarus
 {
     public class WeaponManager : MonoBehaviour
     {
-        [SerializeField] MeleeWeaponDamageCollider meleeWeaponDamageCollider;
+        public MeleeWeaponDamageCollider meleeWeaponDamageCollider;
 
         public void Awake()
         {
@@ -17,6 +17,7 @@ namespace Tartarus
         {
             meleeWeaponDamageCollider.characterCausingDamage = characterWieldingWeapon;
             meleeWeaponDamageCollider.physicalDamage = weapon.physicalDamage;
+            meleeWeaponDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
         }
 
     }

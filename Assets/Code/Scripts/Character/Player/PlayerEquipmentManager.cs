@@ -70,7 +70,7 @@ namespace Tartarus
             {
                 playerManager.playerInventoryManager.rightHandSlotIndex = 0;
 
-                // If there arre more than one weapons dont go to unarmed
+                // If there are more than one weapons dont go to unarmed
                 float weaponCount = 0;
                 WeaponItem firstWeapon = null;
                 int firstWeaponIndex = 0;
@@ -163,6 +163,39 @@ namespace Tartarus
         }
 
         #endregion
+
+        // Damage colliders
+
+        public void OpenDamageCollider()
+        {
+            // Open right weapon damage collider
+            if(playerManager.isUsingRightHand)
+            {
+                rightHandWeaponManager.meleeWeaponDamageCollider.EnableDamageCollider();
+            }
+
+            if(playerManager.isUsingLeftHand)
+            {
+                leftHandWeaponManager.meleeWeaponDamageCollider.EnableDamageCollider();
+            }
+
+            // Maybe whoosh sfx?
+
+        }
+
+        public void CloseDamageCollider()
+        {
+            // Close right weapon damage collider
+            if (playerManager.isUsingRightHand)
+            {
+                rightHandWeaponManager.meleeWeaponDamageCollider.DisableDamageCollider();
+            }
+
+            if (playerManager.isUsingLeftHand)
+            {
+                leftHandWeaponManager.meleeWeaponDamageCollider.DisableDamageCollider();
+            }
+        }
 
     }
 }

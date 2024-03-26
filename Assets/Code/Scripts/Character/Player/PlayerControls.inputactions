@@ -96,6 +96,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RMB",
+                    "type": "Button",
+                    "id": "8f2b325d-8e7a-4b0d-9e59-3c498b9e7629",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Walk",
                     "type": "PassThrough",
                     "id": "1eb4ce35-35d0-45dd-832d-d36679891ee0",
@@ -156,6 +165,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9eb46e4c-edf9-47b9-9761-ad05cd50225c",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RMB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

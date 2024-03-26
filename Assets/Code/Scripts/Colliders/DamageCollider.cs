@@ -15,12 +15,17 @@ namespace Tartarus
         public float fireDamage = 0;
 
         [Header ("Contact points")]
-        private Vector3 contactPoint;
+        protected Vector3 contactPoint;
 
         [Header ("Characters damaged")]
         protected List<CharacterManager> charactersDamaged = new List<CharacterManager>();
 
-        private void OnTriggerEnter(Collider other)
+        protected virtual void Awake()
+        {
+
+        }
+
+        protected virtual void OnTriggerEnter(Collider other)
         {
 
             CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();

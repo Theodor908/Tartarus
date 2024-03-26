@@ -20,12 +20,18 @@ namespace Tartarus
         [HideInInspector] public PlayerStatsManager playerStatsManager;
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+        [HideInInspector] public PlayerCombatManager playerCombatManager;
 
-        [Header("Weapon slots")]
+        [Header("Equipment")]
         public int previousRightHandWeaponID = -1;
         public int previousLeftHandWeaponID = -1;
         public int currentRightHandWeaponID = 0;
         public int currentLeftHandWeaponID = 0;
+        public bool isUsingRightHand = true;
+        public bool isUsingLeftHand = false;
+
+        [Header("Player Weapons")]
+        public int currentWeaponBeingUsed = 0;
 
         protected override void Awake()
         {
@@ -46,6 +52,7 @@ namespace Tartarus
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerStatsManager = GetComponent<PlayerStatsManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
+            playerCombatManager = GetComponent<PlayerCombatManager>();
 
         }
 
@@ -86,7 +93,7 @@ namespace Tartarus
             base.LateUpdate();
             PlayerCamera.instance.HandleAllCameraActions();
         }
-
+        #region Death Event and Revive
         public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
         {
             PlayerUIManager.instance.playerUIPopUpManager.ShowYouDiedPopUp();
@@ -100,12 +107,14 @@ namespace Tartarus
             currentHealth = maxHealth;
             currentStamina = maxStamina;
 
-            //Rebirth effects
+            isDead = false;
 
+            //Rebirth effects
             playerAnimationManager.PlayTargetAnimation("Empty", false);
 
         }
-
+        #endregion
+        #region Weapon Actions
         public void HandleWeaponChange(int previousRightID, int currentRightID, int previousLeftID, int currentLeftID)
         {
             if (previousRightID != currentRightID)
@@ -113,12 +122,14 @@ namespace Tartarus
                 Debug.Log("Right weapon change");
                 OnCurrentRightHandWeaponIDChange(currentRightID);
                 previousRightHandWeaponID = currentRightHandWeaponID;
+                OnCurrentWeaponBeingUsedIDChange(currentRightID);
             }
 
             if(previousLeftID != currentLeftID)
             {
                 OnCurrentLeftHandWeaponIDChange(currentLeftID);
                 previousLeftHandWeaponID = currentLeftHandWeaponID;
+                OnCurrentWeaponBeingUsedIDChange(currentLeftID);
             }
         }
 
@@ -137,6 +148,45 @@ namespace Tartarus
             playerEquipmentManager.LoadWeaponOnLeftHand();
         }
 
+        public void OnCurrentWeaponBeingUsedIDChange(int newID)
+        {
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponItem(newID));
+            playerCombatManager.currentWeapon = newWeapon;
+        }
+
+        public void SetCharacterActionHand(bool rightHandAction)
+        {
+
+            if(rightHandAction)
+            {
+                isUsingRightHand = true;
+                isUsingLeftHand = false;
+            }
+            else
+            {
+                isUsingRightHand = false;
+                isUsingLeftHand = true;
+            }
+
+        }
+
+        public void PerformWeaponBasedAction(int actionID, int weaponID)
+        {
+            WeaponItemAction weaponAction = WorldActionManager.instance.GetWeaponItemAction(actionID);
+
+            if(weaponAction != null)
+            {
+                weaponAction.AttemptToPerformAction(this, WorldItemDatabase.instance.GetWeaponItem(weaponID));
+            }
+            else
+            {
+                Debug.Log("Weapon action not found");
+            }
+
+        }
+
+        #endregion
+        #region Save and Load
         public void SaveGameToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
         {
             currentCharacterData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -164,8 +214,7 @@ namespace Tartarus
             currentHealth = currentCharacterData.currentHealth;
             currentStamina = currentCharacterData.currentStamina;
         }
-
-        //Debug
+        #endregion
 
         private void DebugMenu()
         {

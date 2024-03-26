@@ -13,6 +13,7 @@ namespace Tartarus
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
         [HideInInspector] public CharacterAnimationManager characterAnimationManager;
+        [HideInInspector] public CharacterCombatManager characterCombatManager;
         [HideInInspector] public Animator animator;
         public string characterName = "";
 
@@ -39,6 +40,7 @@ namespace Tartarus
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
             characterAnimationManager = GetComponent<CharacterAnimationManager>();
             animator = GetComponent<Animator>();
+            characterCombatManager = GetComponent<CharacterCombatManager>();
         }
 
         protected virtual void Start()
