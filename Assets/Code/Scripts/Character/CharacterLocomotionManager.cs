@@ -87,6 +87,7 @@ namespace Tartarus
         { 
             if(skipGroundCheckTimerCounter > 0)
             {
+                Debug.Log("I am not grounded");
                 characterManager.isGrounded = false;
                 skipGroundCheckTimerCounter -= Time.deltaTime;
                 return;

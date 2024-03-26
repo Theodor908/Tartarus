@@ -51,6 +51,7 @@ namespace Tartarus
         protected virtual void Update()
         {
             animator.SetBool("isGrounded", isGrounded);
+            CheckHealthPoints();
         }
 
         protected virtual void LateUpdate()
@@ -60,7 +61,7 @@ namespace Tartarus
 
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
         {
-            currentHealth = 1;
+            currentHealth = 0;
             isDead = true;
 
             // Reset all flags
@@ -90,8 +91,9 @@ namespace Tartarus
 
         public void CheckHealthPoints()
         {
-            if(currentHealth <= 0)
+            if(currentHealth <= 0 && !isDead)
             {
+                animator.SetBool("isDead", true);
                 StartCoroutine(ProcessDeathEvent());
             }
 

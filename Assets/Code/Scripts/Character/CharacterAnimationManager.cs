@@ -8,6 +8,12 @@ namespace Tartarus
     {
         CharacterManager characterManager;
 
+        [Header("Damage animations")]
+        public string hit_Forward_Medium_01 = "hit_Forward_Medium_01";
+        public string hit_Backward_Medium_01 = "hit_Backward_Medium_01";
+        public string hit_Left_Medium_01 = "hit_Left_Medium_01";
+        public string hit_Right_Medium_01 = "hit_Right_Medium_01";
+
         protected virtual void Awake()
         {
             characterManager = GetComponent<CharacterManager>();
@@ -21,6 +27,7 @@ namespace Tartarus
 
         public virtual void PlayTargetAnimation(string targetAnimation, bool isInteracting, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
+            Debug.Log("Playing animation " + targetAnimation);
             characterManager.applyRootMotion = applyRootMotion;
             characterManager.animator.applyRootMotion = applyRootMotion;
             characterManager.animator.CrossFade(targetAnimation, 0.2f);
@@ -36,6 +43,9 @@ namespace Tartarus
             //Update animation set to the current weapons animations
             // decide if our attack can be parried
             // we are in an attacking flag
+
+            Debug.Log("Playing action animation " + targetAnimation);
+
             characterManager.characterCombatManager.currentAttackType = attackType;
             characterManager.applyRootMotion = applyRootMotion;
             characterManager.animator.applyRootMotion = applyRootMotion;

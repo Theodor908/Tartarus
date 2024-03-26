@@ -54,6 +54,9 @@ namespace Tartarus
             }
 
             CalculateDamage(characterManager);
+            PlayDirectionalBasedDamageAnimation(characterManager);
+
+            PlayDamageVFX(characterManager);
 
         }
 
@@ -75,6 +78,44 @@ namespace Tartarus
 
             characterManager.currentHealth -= totalDamage;
             Debug.Log("Character " + characterManager.characterName + " took " + totalDamage + " damage");
+        }
+
+        private void PlayDamageVFX(CharacterManager characterManager)
+        {
+            characterManager.characterEffectsManager.PlayBloodSplatterVFX(contactPoint);
+        }
+
+        private void PlayDirectionalBasedDamageAnimation(CharacterManager characterManager)
+        {
+
+            poiseIsBroken = true;
+
+            if (angleOfDamage >= 145 && angleOfDamage <= 180)
+            {
+                damageAnimation = characterManager.characterAnimationManager.hit_Forward_Medium_01;
+            }
+            else if (angleOfDamage <= -145 && angleOfDamage >= -180)
+            {
+                damageAnimation = characterManager.characterAnimationManager.hit_Forward_Medium_01;
+            }
+            else if (angleOfDamage >= -45 && angleOfDamage <= 45)
+            {
+                damageAnimation = characterManager.characterAnimationManager.hit_Backward_Medium_01;
+            }
+            else if (angleOfDamage >= -144 && angleOfDamage <= 45)
+            {
+                damageAnimation = characterManager.characterAnimationManager.hit_Left_Medium_01;
+            }
+            else if (angleOfDamage >= 45 && angleOfDamage <= 144)
+            {
+                damageAnimation = characterManager.characterAnimationManager.hit_Right_Medium_01;
+            }
+
+            if(poiseIsBroken)
+            {
+                characterManager.characterAnimationManager.PlayTargetAnimation(damageAnimation, true);
+            }
+
         }
 
     }

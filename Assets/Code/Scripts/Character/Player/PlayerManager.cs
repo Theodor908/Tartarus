@@ -79,9 +79,9 @@ namespace Tartarus
             HandleWeaponChange(previousRightHandWeaponID, currentRightHandWeaponID, previousLeftHandWeaponID, currentLeftHandWeaponID);
             // Update resources
             PlayerUIManager.instance.playerUIHudManager.setNewHealthValue(currentHealth);
-            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina);
-            
-            CheckHealthPoints();   
+            PlayerUIManager.instance.playerUIHudManager.setNewStaminaValue(currentStamina); 
+
+            CheckHealthPoints();
 
             //Debug
             DebugMenu();
@@ -110,7 +110,8 @@ namespace Tartarus
             isDead = false;
 
             //Rebirth effects
-            playerAnimationManager.PlayTargetAnimation("Empty", false);
+            Debug.Log("Reviving player");
+            animator.SetBool("isDead", false);
 
         }
         #endregion
