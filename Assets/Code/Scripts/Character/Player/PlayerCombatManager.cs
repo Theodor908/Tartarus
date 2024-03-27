@@ -43,5 +43,12 @@ namespace Tartarus
             playerManager.currentStamina -= Mathf.RoundToInt(staminaDeducted);
         }
 
+        public override void SetLockOnTarget(CharacterManager newTarget)
+        {
+            base.SetLockOnTarget(newTarget);
+            Debug.Log("Setting lock on target");
+            PlayerCamera.instance.SetLockCameraHeight();
+        }
+
     }
 }

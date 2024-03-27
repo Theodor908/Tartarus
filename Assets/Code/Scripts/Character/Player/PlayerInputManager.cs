@@ -32,6 +32,9 @@ namespace Tartarus
 
         [Header ("Lock On Input")]
         [SerializeField] bool lockOnInput = false;
+        [SerializeField] bool lockOn_LeftInput = false;
+        [SerializeField] bool lockOn_RightInput = false;
+        private Coroutine lockOnCoroutine;
 
 
         public static PlayerInputManager Instance { get => instance; }
@@ -71,6 +74,8 @@ namespace Tartarus
 
                 // Lock on
                 playerControls.PlayerActions.Lockon.performed += ctx => lockOnInput = true;
+                playerControls.PlayerActions.SeekLeftLockOnTarget.performed += ctx => lockOn_LeftInput = true;
+                playerControls.PlayerActions.SeekRightLockOnTarget.performed += ctx => lockOn_RightInput = true;
 
                 // Sprint
                 playerControls.PlayerActions.Sprint.performed += ctx => sprintInput = true;
@@ -90,48 +95,7 @@ namespace Tartarus
             HandleLockOnInput();
             HandleMovementInput();
             HandleCameraMovementInput();
-
-        }
-
-        private void HandleLockOnInput()
-        {
-            // if using a bow return
-
-            // Dead targets
-            if(playerManager.isLockedOn)
-            {
-                if(playerManager.playerCombatManager.currentTarget == null)
-                {
-                    return;
-                }
-
-                if (playerManager.playerCombatManager.currentTarget.isDead)
-                {
-                    playerManager.isLockedOn = false;
-                }
-
-                // Find new target or unlock
-
-
-            }
-
-            if(lockOnInput && playerManager.isLockedOn)
-            {
-                lockOnInput = false;
-                // Disable lock on
-
-                return;
-            }
-
-            if (lockOnInput && !playerManager.isLockedOn)
-            {
-                lockOnInput = false;
-                Debug.Log("Attempting to lock on");
-                PlayerCamera.instance.HandleLocatingLockOnTargets();
-
-                return;
-            }
-
+            HandleLockOnSwitchTargetInput();
 
         }
 
@@ -141,26 +105,31 @@ namespace Tartarus
         {
             horizontalInput = movementInput.x;
             verticalInput = movementInput.y;
-            moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput)); 
+            moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
 
-            if(moveAmount > 0 && walkInput)
+            if (moveAmount > 0 && walkInput)
             {
                 moveAmount = 0.5f;
             }
-            else if(moveAmount > 0 && !sprintInput)
+            else if (moveAmount > 0 && !sprintInput)
             {
                 moveAmount = 1f;
             }
-            else if(moveAmount > 0 && sprintInput)
+            else if (moveAmount > 0 && sprintInput)
             {
                 moveAmount = 2f;
             }
 
-            // Not locked-on
-            playerManager.playerAnimationManager.UpdateAnimatorMovementParameters(0,moveAmount);
-
-            // Locked-on
-            // to implement
+            if (!playerManager.isLockedOn || playerManager.isSprinting)
+            {
+                // Not locked-on
+                playerManager.playerAnimationManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            }
+            else
+            {
+                // Locked-on
+                playerManager.playerAnimationManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput);
+            }
 
         }
 
@@ -214,6 +183,97 @@ namespace Tartarus
                 playerManager.playerCombatManager.PerformWeaponBasedAction(playerManager.playerInventoryManager.currentRightHandWeaponItem.oh_RMB_Action, playerManager.playerInventoryManager.currentRightHandWeaponItem);
 
             }
+        }
+
+        private void HandleLockOnInput()
+        {
+            // if using a bow return
+
+            // Dead targets
+            if (playerManager.isLockedOn)
+            {
+                if (playerManager.playerCombatManager.currentTarget == null)
+                {
+                    return;
+                }
+
+                if (playerManager.playerCombatManager.currentTarget.isDead)
+                {
+                    playerManager.isLockedOn = false;
+
+                    if (lockOnCoroutine != null)
+                    {
+                        StopCoroutine(lockOnCoroutine);
+                    }
+
+                    lockOnCoroutine = StartCoroutine(PlayerCamera.instance.WaitThenFindNewTarget());
+                }
+
+            }
+
+            if (lockOnInput && playerManager.isLockedOn)
+            {
+                lockOnInput = false;
+                PlayerCamera.instance.ClearLockOnTargets();
+                playerManager.isLockedOn = false;
+
+                return;
+            }
+
+            if (lockOnInput && !playerManager.isLockedOn)
+            {
+                lockOnInput = false;
+                Debug.Log("Attempting to lock on");
+                PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                if (PlayerCamera.instance.nearestLockOnTarget != null)
+                {
+                    playerManager.characterCombatManager.SetLockOnTarget(PlayerCamera.instance.nearestLockOnTarget);
+                    playerManager.isLockedOn = true;
+                }
+
+                return;
+            }
+
+
+        }
+
+        private void HandleLockOnSwitchTargetInput()
+        {
+            if (lockOn_LeftInput)
+            {
+                lockOn_LeftInput = false;
+
+                if (playerManager.isLockedOn)
+                {
+                    PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                    if (PlayerCamera.instance.leftLockOnTarget != null)
+                    {
+                        playerManager.characterCombatManager.SetLockOnTarget(PlayerCamera.instance.leftLockOnTarget);
+                    }
+
+                }
+
+            }
+
+            if (lockOn_RightInput)
+            {
+                lockOn_RightInput = false;
+
+                if (playerManager.isLockedOn)
+                {
+                    PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                    if (PlayerCamera.instance.rightLockOnTarget != null)
+                    {
+                        playerManager.characterCombatManager.SetLockOnTarget(PlayerCamera.instance.rightLockOnTarget);
+                    }
+
+                }
+
+            }
+
         }
 
         #endregion

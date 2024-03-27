@@ -7,6 +7,8 @@ namespace Tartarus
     public class CharacterCombatManager : MonoBehaviour
     {
 
+        CharacterManager characterManager;
+
         [Header("Attack Target")]
         public CharacterManager currentTarget;
 
@@ -18,8 +20,15 @@ namespace Tartarus
 
         protected virtual void Awake()
         {
-
+            characterManager = GetComponent<CharacterManager>();
         }
 
+        public virtual void SetLockOnTarget(CharacterManager newTarget)
+        {
+            if(newTarget != null)
+            {
+                currentTarget = newTarget;
+            }
+        }
     }
 }

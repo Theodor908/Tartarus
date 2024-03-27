@@ -23,6 +23,7 @@ namespace Tartarus
             characterManager.canMove = true;
             characterManager.canRotate = true;
             characterManager.applyRootMotion = false;
+            characterManager.characterLocomotionManager.isRolling = false; 
 
         }
 

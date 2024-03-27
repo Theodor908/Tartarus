@@ -14,6 +14,7 @@ namespace Tartarus
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
         [HideInInspector] public CharacterAnimationManager characterAnimationManager;
         [HideInInspector] public CharacterCombatManager characterCombatManager;
+        [HideInInspector] public CharacterLocomotionManager characterLocomotionManager;
         [HideInInspector] public Animator animator;
         public string characterName = "";
 
@@ -42,6 +43,7 @@ namespace Tartarus
             characterAnimationManager = GetComponent<CharacterAnimationManager>();
             animator = GetComponent<Animator>();
             characterCombatManager = GetComponent<CharacterCombatManager>();
+            characterLocomotionManager = GetComponent<CharacterLocomotionManager>();
         }
 
         protected virtual void Start()
@@ -53,6 +55,8 @@ namespace Tartarus
         {
             animator.SetBool("isGrounded", isGrounded);
             CheckHealthPoints();
+            ResetLockOn();
+
         }
 
         protected virtual void LateUpdate()
@@ -94,7 +98,6 @@ namespace Tartarus
         {
             if(currentHealth <= 0 && !isDead)
             {
-                animator.SetBool("isDead", true);
                 StartCoroutine(ProcessDeathEvent());
             }
 
@@ -132,6 +135,12 @@ namespace Tartarus
                 }
             }
 
+        }
+
+       public virtual void ResetLockOn()
+        {
+            if (!isLockedOn)
+                characterCombatManager.currentTarget = null;
         }
 
     }
