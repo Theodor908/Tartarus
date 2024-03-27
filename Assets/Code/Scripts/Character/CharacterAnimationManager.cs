@@ -21,8 +21,52 @@ namespace Tartarus
 
         public void UpdateAnimatorMovementParameters(float horizontalValue, float verticalValue)
         {
-            characterManager.animator.SetFloat("Horizontal", horizontalValue, 0.1f, Time.deltaTime);
-            characterManager.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
+
+            float snappedHorizontalValue = 0;
+            float snappedVerticalValue = 0;
+
+            // Snapping values to 0, 0.5 and 1 for horizontal values
+            if(horizontalValue > 0 && horizontalValue <= 0.5)
+            {
+                snappedHorizontalValue = 0.5f;
+            }
+            else if(horizontalValue > 0.5 && horizontalValue <= 1)
+            {
+                snappedHorizontalValue = 1;
+            }
+            else if(horizontalValue < 0 && horizontalValue >= -0.5)
+            {
+                snappedHorizontalValue = -0.5f;
+            }
+            else if(horizontalValue < -0.5 && horizontalValue >= -1)
+            {
+                snappedHorizontalValue = -1;
+            }
+
+            // Snapping values to 0, 0.5 and 1 for vertical values
+            if(verticalValue > 0 && verticalValue <= 0.5)
+            {
+                snappedVerticalValue = 0.5f;
+            }
+            else if(verticalValue > 0.5 && verticalValue <= 1)
+            {
+                snappedVerticalValue = 1;
+            }
+            else if(verticalValue < 0 && verticalValue >= -0.5)
+            {
+                snappedVerticalValue = -0.5f;
+            }
+            else if(verticalValue < -0.5 && verticalValue >= -1)
+            {
+                snappedVerticalValue = -1;
+            }
+
+
+            if (characterManager.isSprinting)
+                snappedVerticalValue = 2;
+
+            characterManager.animator.SetFloat("Horizontal", snappedHorizontalValue, 0.1f, Time.deltaTime);
+            characterManager.animator.SetFloat("Vertical", snappedVerticalValue, 0.1f, Time.deltaTime);
         }
 
         public virtual void PlayTargetAnimation(string targetAnimation, bool isInteracting, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)

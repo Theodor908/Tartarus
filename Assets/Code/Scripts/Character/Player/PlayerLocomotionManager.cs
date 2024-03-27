@@ -90,27 +90,68 @@ namespace Tartarus
 
         public void HandleRotation()
         {
+            if (playerManager.isDead)
+                return;
 
             if(!playerManager.canRotate)
             {
                 return;
             }
 
-            Vector3 targetRotation = Vector3.zero;
-            targetRotation = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-            targetRotation += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
-
-            targetRotation.y = 0;
-            targetRotation.Normalize();
-
-            if(targetRotation == Vector3.zero)
+            if (playerManager.isLockedOn)
             {
-                targetRotation = transform.forward;
-            }
+                if(playerManager.isSprinting || playerManager.playerLocomotionManager.isRolling)
+                {
+                    Vector3 targetDirection = Vector3.zero;
+                    targetDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                    targetDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                    targetDirection.y = 0;
+                    targetDirection.Normalize();
 
-            Quaternion turnRotation = Quaternion.LookRotation(targetRotation);
-            Quaternion newRotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSpeed * Time.deltaTime);
-            transform.rotation = newRotation;
+                    if(targetDirection == Vector3.zero)
+                    {
+                        targetDirection = transform.forward;
+                    }
+
+                    Quaternion tr = Quaternion.LookRotation(targetDirection);
+                    Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, rotationSpeed * Time.deltaTime);
+                    transform.rotation = targetRotation;
+                }
+                else
+                {
+                    if(playerManager.playerCombatManager.currentTarget == null)
+                    {
+                        return;
+                    }
+
+                    Vector3 targetDirection = playerManager.playerCombatManager.currentTarget.transform.position - transform.position;
+                    targetDirection.y = 0;
+                    targetDirection.Normalize();
+
+                    Quaternion tr = Quaternion.LookRotation(targetDirection);
+                    Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, rotationSpeed * Time.deltaTime);
+                    transform.rotation = targetRotation;
+
+                }
+            }
+            else
+            {
+                Vector3 targetRotation = Vector3.zero;
+                targetRotation = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                targetRotation += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+
+                targetRotation.y = 0;
+                targetRotation.Normalize();
+
+                if (targetRotation == Vector3.zero)
+                {
+                    targetRotation = transform.forward;
+                }
+
+                Quaternion turnRotation = Quaternion.LookRotation(targetRotation);
+                Quaternion newRotation = Quaternion.Slerp(transform.rotation, turnRotation, rotationSpeed * Time.deltaTime);
+                transform.rotation = newRotation;
+            }
 
         }
 
@@ -148,6 +189,7 @@ namespace Tartarus
 
                 playerManager.transform.rotation = playerRotation;
 
+                isRolling = true;
                 playerManager.playerAnimationManager.PlayTargetAnimation("Roll_Forward_01", true, true);
 
             }

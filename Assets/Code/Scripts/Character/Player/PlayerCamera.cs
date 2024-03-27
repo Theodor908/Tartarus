@@ -33,8 +33,14 @@ namespace Tartarus
         [SerializeField] private float minimumViewableAngle = -50;
         [SerializeField] private float maximumViewableAngle = 50;
         private List<CharacterManager> availableTargets = new List<CharacterManager>();
+        [SerializeField] float lockOnTargetFollowSpeed = 0.2f;
+        [SerializeField] float lockOnHeightSpeed = 0.6f;
+        [SerializeField] float unlockedCameraHeight = 1.65f;
+        [SerializeField] float lockedCameraHeight = 2.0f;
+        private Coroutine lockOnHeightCoroutine;
         public CharacterManager nearestLockOnTarget;
-        [SerializeField] float lockOnTargetFollowSpeed = 0.2f; 
+        public CharacterManager leftLockOnTarget; 
+        public CharacterManager rightLockOnTarget;
 
 
         private void Awake()
@@ -202,6 +208,12 @@ namespace Tartarus
                 // sort svailable targets by distance
                 for(int k = 0; k < availableTargets.Count; k++)
                 {
+
+                    if (availableTargets[k] == playerManager.playerCombatManager.currentTarget)
+                    {
+                        continue;
+                    }
+
                     if (availableTargets[k] != null)
                     {
                         float distaceFromTarget = Vector3.Distance(playerManager.transform.position, availableTargets[k].transform.position);
@@ -211,6 +223,25 @@ namespace Tartarus
                         {
                             shortDistance = distaceFromTarget;
                             nearestLockOnTarget = availableTargets[k];
+                        }
+
+                        if(playerManager.isLockedOn)
+                        {
+                            Vector3 relativeEnemyPosition = playerManager.transform.InverseTransformPoint(availableTargets[k].transform.position);
+                            var distanceFromLeftTarget = relativeEnemyPosition.x;
+                            var distanceFromRightTarget = relativeEnemyPosition.x;
+
+                            if(relativeEnemyPosition.x <= 0.00 && distanceFromLeftTarget > shortDistanceOfLeftTarget)
+                            {
+                                shortDistanceOfLeftTarget = distanceFromLeftTarget;
+                                leftLockOnTarget = availableTargets[k];
+                            }
+                            else if(relativeEnemyPosition.x > 0.00 && distanceFromRightTarget < shortDistanceOfRightTarget)
+                            {
+                                shortDistanceOfRightTarget = distanceFromRightTarget;
+                                rightLockOnTarget = availableTargets[k];
+                            }
+
                         }
 
                     }
@@ -225,10 +256,77 @@ namespace Tartarus
 
         }
 
+        public void SetLockCameraHeight()
+        {
+            if(lockOnHeightCoroutine != null)
+            {
+                StopCoroutine(lockOnHeightCoroutine);
+            }
+
+            lockOnHeightCoroutine = StartCoroutine(SetCameraHeight());
+
+        }
+
         public void ClearLockOnTargets()
         {
             nearestLockOnTarget = null;
+            leftLockOnTarget = null;
+            rightLockOnTarget = null;
             availableTargets.Clear();
+        }
+
+        public IEnumerator WaitThenFindNewTarget()
+        {
+            while(playerManager.isInteracting)
+            {
+                yield return null;
+            }
+
+            ClearLockOnTargets();
+            HandleLocatingLockOnTargets();
+
+            if(nearestLockOnTarget != null)
+            {
+                playerManager.characterCombatManager.SetLockOnTarget(nearestLockOnTarget);
+                playerManager.isLockedOn = true;
+            }
+
+            yield return null;
+        }
+
+        public IEnumerator SetCameraHeight()
+        {
+            float duration = 1;
+            float timer = 0;
+
+            Debug.Log("Setting camera height");
+
+            Vector3 velocity = Vector3.zero;
+
+            Vector3 newLockedCameraHeight = new Vector3(cameraPivotTransform.transform.localPosition.x, lockedCameraHeight);
+            Vector3 newUnlockedCameraHeight = new Vector3(cameraPivotTransform.transform.localPosition.x, unlockedCameraHeight);
+
+            while(timer < duration)
+            {
+                timer += Time.deltaTime;
+
+                if(playerManager != null)
+                {
+                    if(playerManager.playerCombatManager.currentTarget != null)
+                    {
+                        cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newLockedCameraHeight, ref velocity, lockOnHeightSpeed);
+                        cameraPivotTransform.transform.localRotation = Quaternion.Slerp(cameraPivotTransform.transform.localRotation, Quaternion.Euler(0,0,0), lockOnTargetFollowSpeed);
+                    }
+                    else
+                    {
+                        cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(cameraPivotTransform.transform.localPosition, newUnlockedCameraHeight, ref velocity, lockOnHeightSpeed);
+                    }
+                }
+
+                yield return null;
+            }
+        
+            yield return null;
         }
 
     }
